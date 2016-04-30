@@ -79,6 +79,8 @@ To use ``tasker``:
       parent=parent,
    )
 
+   pid = task.process.pid
+
 Supported platforms
 -------------------
 
