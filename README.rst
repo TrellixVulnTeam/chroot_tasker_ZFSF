@@ -5,6 +5,8 @@
 .. image:: https://travis-ci.org/adamtheturtle/chroot_tasker.svg?branch=master
     :target: https://travis-ci.org/adamtheturtle/chroot_tasker
 
+.. image:: https://coveralls.io/repos/github/adamtheturtle/chroot_tasker/badge.svg?branch=master :target: https://coveralls.io/github/adamtheturtle/chroot_tasker?branch=master
+
 Tasker
 ------
 
