@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-apt-get -y install python-virtualenv
+apt-get -y install python-virtualenv python-dev
 pip install virtualenvwrapper
 cat > /home/vagrant/.bashrc << "EOF"
 export WORKON_HOME=/home/vagrant/.virtualenvs
