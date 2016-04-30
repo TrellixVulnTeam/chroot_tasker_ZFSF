@@ -35,16 +35,53 @@ class TestCreateFilestystemDir(object):
         # Assert that the extracted filesystem's parent is client.
         # Assert that the extracted filesystem contains hello.txt
 
-
-    def test_multiple_filesystems(self):
+    def test_multiple_filesystems(self, tmpdir):
         """
         Multiple filesystem directories can exist from the same image.
         """
+        server = tmpdir.mkdir('server')
+        filesystem = server.mkdir('filesystem')
+        text_file = tmpdir.mkdir("sub").join("hello.txt")
+        text_file.write("content")
+        tar_file = tmpdir.join('filesystem.tar')
+        with tarfile.open(tar_file.strpath, 'w') as tar:
+            tar.add(filesystem.strpath, arcname=filesystem.basename)
+        image_url = 'file://' + tar_file.strpath
 
-    def test_image_removed(self):
+        client = tmpdir.mkdir('client')
+        extracted_filesystem_1 = _create_filesystem_dir(
+            image_url=image_url,
+            parent=client.strpath,
+        )
+
+        extracted_filesystem_2 = _create_filesystem_dir(
+            image_url=image_url,
+            parent=client.strpath,
+        )
+
+        # Assert that the paths of the two extracted filesystems are not equal.
+
+    def test_image_removed(self, tmpdir):
         """
         The downloaded image is deleted.
         """
+        server = tmpdir.mkdir('server')
+        filesystem = server.mkdir('filesystem')
+        text_file = tmpdir.mkdir("sub").join("hello.txt")
+        text_file.write("content")
+        tar_file = tmpdir.join('filesystem.tar')
+        with tarfile.open(tar_file.strpath, 'w') as tar:
+            tar.add(filesystem.strpath, arcname=filesystem.basename)
+        image_url = 'file://' + tar_file.strpath
+
+        client = tmpdir.mkdir('client')
+        extracted_filesystem = _create_filesystem_dir(
+            image_url=image_url,
+            parent=client.strpath,
+        )
+
+        # Assert that the tar file is not at some location.
+        # Separate tar creation out.
 
 
 class TestTask(object):
@@ -57,6 +94,7 @@ class TestTask(object):
         A task can be created which starts a new process running a given
         command.
         """
+
 
 class TestRunChrootProcess(object):
     """
