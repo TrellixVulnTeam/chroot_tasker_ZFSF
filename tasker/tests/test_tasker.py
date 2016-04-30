@@ -93,8 +93,13 @@ class TestRunChrootProcess(object):
         A new process is created from the given arguments in a chroot jail
         of the given filesystem path.
         """
+        rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
+        filesystem = _create_filesystem_dir(
+            image_url=rootfs.as_uri(),
+            parent=pathlib.Path(tmpdir.strpath),
+        )
         _run_chroot_process(
-            filesystem=pathlib.Path(tmpdir.strpath),
+            filesystem=filesystem,
             args=['touch', '/example.txt'],
         )
         assert tmpdir.listdir() == [tmpdir.join('example.txt')]
