@@ -2,6 +2,10 @@
 Create and interact with tasks in a chroot jail.
 """
 
+import urllib2
+
+import pathlib
+
 
 def _create_filesystem_dir(image_url, parent):
     """
@@ -15,7 +19,11 @@ def _create_filesystem_dir(image_url, parent):
     :rtype: pathlib.Path
     :returns: The path to the extracted image.
     """
-    pass
+    image = urllib2.urlopen(image_url)
+    # Use ``image.url`` below instead of image_url in case of a redirect.
+    image_path = pathlib.Path(urllib2.urlparse.urlparse(image.url).path)
+    filesystem_path = parent.joinpath(image_path.stem)
+    return filesystem_path
 
 
 def _run_chroot_process(filesystem, args):

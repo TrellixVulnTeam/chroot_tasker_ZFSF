@@ -26,15 +26,15 @@ class TestCreateFilestystemDir(object):
         tar_file = tmpdir.join('filesystem.tar')
         with tarfile.open(tar_file.strpath, 'w') as tar:
             tar.add(filesystem.strpath, arcname=filesystem.basename)
-        image_url = 'file://' + tar_file.strpath
+        image_url = pathlib.Path(tar_file.strpath).as_uri()
 
-        client = tmpdir.mkdir('client')
+        client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem = _create_filesystem_dir(
             image_url=image_url,
-            parent=pathlib.Path(client.strpath),
+            parent=client,
         )
 
-        # Assert that the extracted filesystem's parent is client.
+        assert extracted_filesystem.parent == client
         # Assert that the extracted filesystem contains hello.txt
 
     def test_multiple_filesystems(self, tmpdir):
@@ -50,15 +50,15 @@ class TestCreateFilestystemDir(object):
             tar.add(filesystem.strpath, arcname=filesystem.basename)
         image_url = 'file://' + tar_file.strpath
 
-        client = tmpdir.mkdir('client')
+        client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem_1 = _create_filesystem_dir(
             image_url=image_url,
-            parent=pathlib.Path(client.strpath),
+            parent=client,
         )
 
         extracted_filesystem_2 = _create_filesystem_dir(
             image_url=image_url,
-            parent=pathlib.Path(client.strpath),
+            parent=client,
         )
 
         # Assert that the paths of the two extracted filesystems are not equal.
@@ -76,10 +76,10 @@ class TestCreateFilestystemDir(object):
             tar.add(filesystem.strpath, arcname=filesystem.basename)
         image_url = 'file://' + tar_file.strpath
 
-        client = tmpdir.mkdir('client')
+        client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem = _create_filesystem_dir(
             image_url=image_url,
-            parent=pathlib.Path(client.strpath),
+            parent=client,
         )
 
         # Assert that the tar file is not at some location.
