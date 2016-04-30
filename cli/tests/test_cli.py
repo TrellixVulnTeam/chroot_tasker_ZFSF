@@ -30,12 +30,12 @@ class TestCreate(object):
         subcommand = 'create'
         commands = 'sleep 10'
         result = runner.invoke(cli, [subcommand, image_url, commands])
-        # Assert that the sleep comand is there
-        # kill the sleep command.
 
         # The PID of the new process is outputted.
         [pid] = map(int, result.output.splitlines())
         process = psutil.Process(pid)
+        cmdline = process.cmdline()
         process.kill()
 
         assert result.exit_code == 0
+        assert cmdline == commands.split()
