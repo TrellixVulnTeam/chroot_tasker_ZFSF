@@ -9,6 +9,7 @@ import psutil
 from click.testing import CliRunner
 
 from cli.cli import cli
+from common.testtools import ROOTFS_URI
 
 
 class TestCreate(object):
@@ -26,10 +27,9 @@ class TestCreate(object):
 
         runner = CliRunner()
         # TODO Generate this
-        image_url = 'file:///vagrant/tasker/tests/rootfs.tar'
         subcommand = 'create'
         commands = 'sleep 10'
-        result = runner.invoke(cli, [subcommand, image_url, commands])
+        result = runner.invoke(cli, [subcommand, ROOTFS_URI, commands])
 
         # The PID of the new process is outputted.
         [pid] = map(int, result.output.splitlines())
