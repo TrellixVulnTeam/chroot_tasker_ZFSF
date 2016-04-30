@@ -4,6 +4,8 @@ Tests for ``tasker.tasker``.
 
 import tarfile
 
+import pathlib
+
 from tasker.tasker import _create_filesystem_dir
 
 
@@ -29,7 +31,7 @@ class TestCreateFilestystemDir(object):
         client = tmpdir.mkdir('client')
         extracted_filesystem = _create_filesystem_dir(
             image_url=image_url,
-            parent=client.strpath,
+            parent=pathlib.Path(client.strpath),
         )
 
         # Assert that the extracted filesystem's parent is client.
@@ -51,12 +53,12 @@ class TestCreateFilestystemDir(object):
         client = tmpdir.mkdir('client')
         extracted_filesystem_1 = _create_filesystem_dir(
             image_url=image_url,
-            parent=client.strpath,
+            parent=pathlib.Path(client.strpath),
         )
 
         extracted_filesystem_2 = _create_filesystem_dir(
             image_url=image_url,
-            parent=client.strpath,
+            parent=pathlib.Path(client.strpath),
         )
 
         # Assert that the paths of the two extracted filesystems are not equal.
@@ -77,7 +79,7 @@ class TestCreateFilestystemDir(object):
         client = tmpdir.mkdir('client')
         extracted_filesystem = _create_filesystem_dir(
             image_url=image_url,
-            parent=client.strpath,
+            parent=pathlib.Path(client.strpath),
         )
 
         # Assert that the tar file is not at some location.
