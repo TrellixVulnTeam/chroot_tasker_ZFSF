@@ -36,7 +36,8 @@ One way to use this is:
 
 .. code:: sh
 
-   sudo $(which tasker) create <IMAGE_URL> "<COMMANDS>"
+   $ sudo $(which tasker) create <IMAGE_URL> "<COMMANDS>"
+   8935 # This is the PID of the new process.
 
 ``tasker`` downloads the image from the given ``<IMAGE_URL>`` into the current working directory.
 Also in the directory, the image is untarred to create a "filesystem".
