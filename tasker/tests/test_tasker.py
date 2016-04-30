@@ -21,11 +21,11 @@ class TestCreateFilestystemDir(object):
         """
         server = tmpdir.mkdir('server')
         filesystem = server.mkdir('filesystem')
-        text_file = tmpdir.mkdir("sub").join("hello.txt")
+        text_file = filesystem.join("hello.txt")
         text_file.write("content")
         tar_file = tmpdir.join('filesystem.tar')
         with tarfile.open(tar_file.strpath, 'w') as tar:
-            tar.add(filesystem.strpath, arcname=filesystem.basename)
+            tar.add(text_file.strpath, arcname=text_file.basename)
         image_url = pathlib.Path(tar_file.strpath).as_uri()
 
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
@@ -43,12 +43,12 @@ class TestCreateFilestystemDir(object):
         """
         server = tmpdir.mkdir('server')
         filesystem = server.mkdir('filesystem')
-        text_file = tmpdir.mkdir("sub").join("hello.txt")
+        text_file = filesystem.join("hello.txt")
         text_file.write("content")
         tar_file = tmpdir.join('filesystem.tar')
         with tarfile.open(tar_file.strpath, 'w') as tar:
-            tar.add(filesystem.strpath, arcname=filesystem.basename)
-        image_url = 'file://' + tar_file.strpath
+            tar.add(text_file.strpath, arcname=text_file.basename)
+        image_url = pathlib.Path(tar_file.strpath).as_uri()
 
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem_1 = _create_filesystem_dir(
@@ -69,12 +69,12 @@ class TestCreateFilestystemDir(object):
         """
         server = tmpdir.mkdir('server')
         filesystem = server.mkdir('filesystem')
-        text_file = tmpdir.mkdir("sub").join("hello.txt")
+        text_file = filesystem.join("hello.txt")
         text_file.write("content")
         tar_file = tmpdir.join('filesystem.tar')
         with tarfile.open(tar_file.strpath, 'w') as tar:
-            tar.add(filesystem.strpath, arcname=filesystem.basename)
-        image_url = 'file://' + tar_file.strpath
+            tar.add(text_file.strpath, arcname=text_file.basename)
+        image_url = pathlib.Path(tar_file.strpath).as_uri()
 
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem = _create_filesystem_dir(
