@@ -10,4 +10,10 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/trusty64"
   config.vm.provision :shell, path: "bootstrap.sh"
+
+  if Vagrant.has_plugin?("vagrant-vbguest")
+    # Do not check the correct additions version when booting this machine
+    # This makes provisioning faster.
+    config.vbguest.auto_update = false
+  end
 end
