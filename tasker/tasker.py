@@ -3,6 +3,7 @@ Create and interact with tasks in a chroot jail.
 """
 
 import os
+import subprocess
 import tarfile
 import urllib2
 import uuid
@@ -50,8 +51,8 @@ def _run_chroot_process(filesystem, args):
     """
     real_root = os.open("/", os.O_RDONLY)
     os.chroot(str(filesystem))
-    self._process = subprocess.Popen(
-        args=command,
+    process = subprocess.Popen(
+        args=args,
         # stdin=stdin,
         # stdout=stdout,
         # stderr=stderr,
@@ -59,3 +60,4 @@ def _run_chroot_process(filesystem, args):
     os.fchdir(real_root)
     os.chroot(".")
     os.close(real_root)
+    return process
