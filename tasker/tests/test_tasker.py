@@ -6,6 +6,7 @@ import tarfile
 import time
 
 import pathlib
+import psutil
 
 from tasker.tasker import _run_chroot_process, _create_filesystem_dir
 
@@ -122,7 +123,16 @@ class TestRunChrootProcess(object):
         children = [item for item in filesystem.iterdir()]
         assert filesystem.joinpath('example.txt') in children
 
-    def test_process_returned(self):
+    def test_process_returned(self, tmpdir):
         """
+        A new process with a new process ID is created, and the process object
+        is returned.
         """
-        pass
+        filesystem = self._get_filesystem(tmpdir=tmpdir)
+        old_pids = psutil.pids()
+        process = _run_chroot_process(
+            filesystem=filesystem,
+            args=['touch', '/example.txt'],
+        )
+        new_pids = set(psutil.pids()) - set(old_pids)
+        assert process.pid in new_pids
