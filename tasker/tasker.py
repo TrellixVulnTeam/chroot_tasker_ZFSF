@@ -51,7 +51,8 @@ def _run_chroot_process(filesystem, args):
     """
     real_root = os.open("/", os.O_RDONLY)
     os.chroot(str(filesystem))
-    subprocess.Popen(args=args)
+    process = subprocess.Popen(args=args)
     os.fchdir(real_root)
     os.chroot(".")
     os.close(real_root)
+    return process
