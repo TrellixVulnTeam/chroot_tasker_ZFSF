@@ -3,6 +3,7 @@ Tests for ``tasker.tasker``.
 """
 
 import tarfile
+import time
 
 import pathlib
 
@@ -93,6 +94,9 @@ class TestRunChrootProcess(object):
         A new process is created from the given arguments in a chroot jail
         of the given filesystem path.
         """
+        # This tar file was created with:
+        # $ docker run --name rootfs alpine ls
+        # $ docker export rootfs > rootfs.tar
         rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
         filesystem = _create_filesystem_dir(
             image_url=rootfs.as_uri(),
@@ -102,4 +106,8 @@ class TestRunChrootProcess(object):
             filesystem=filesystem,
             args=['touch', '/example.txt'],
         )
-        assert tmpdir.listdir() == [tmpdir.join('example.txt')]
+
+        # ``touch`` takes a short time to work.
+        time.sleep(0.01)
+        children = [item for item in filesystem.iterdir()]
+        assert filesystem.joinpath('example.txt') in children
