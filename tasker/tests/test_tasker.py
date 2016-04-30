@@ -160,3 +160,7 @@ class TestTask(object):
         A task can be created which starts a new process running a given
         command.
         """
+        rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
+        image_url = rootfs.as_uri()
+        args = ['touch', '/example.txt']
+        task = Task(image_url=image_url, args=args)
