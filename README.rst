@@ -119,3 +119,12 @@ Run tests:
 .. code:: sh
 
    sudo $(which py.test)
+
+Design decisions
+----------------
+
+There are at least three options for the directory in which to create the filesystem.
+
+1. A
+2. B
+3. C
