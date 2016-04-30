@@ -2,6 +2,8 @@
 Create and interact with tasks in a chroot jail.
 """
 
+import os
+import subprocess
 import tarfile
 import urllib2
 import uuid
@@ -35,3 +37,22 @@ def _create_filesystem_dir(image_url, parent):
 
     tar_file.unlink()
     return filesystem_path
+
+
+def _run_chroot_process(filesystem, args):
+    """
+    Create a chroot jail and run a process in it.
+
+    :param pathlib.Path filesystem: The directory which should be the root of
+        the new process.
+    :param list args: List of strings. See ``subprocess.Popen.args``.
+
+    :return subprocess.Popen: The newly started process.
+    """
+    real_root = os.open("/", os.O_RDONLY)
+    os.chroot(str(filesystem))
+    process = subprocess.Popen(args=args)
+    os.fchdir(real_root)
+    os.chroot(".")
+    os.close(real_root)
+    return process

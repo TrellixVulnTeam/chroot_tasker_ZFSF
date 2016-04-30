@@ -3,10 +3,12 @@ Tests for ``tasker.tasker``.
 """
 
 import tarfile
+import time
 
 import pathlib
+import psutil
 
-from tasker.tasker import _create_filesystem_dir
+from tasker.tasker import _run_chroot_process, _create_filesystem_dir
 
 
 class TestCreateFilestystemDir(object):
@@ -81,3 +83,56 @@ class TestCreateFilestystemDir(object):
 
         client_children = [item for item in client.iterdir()]
         assert client_children == [extracted_filesystem]
+
+
+class TestRunChrootProcess(object):
+    """
+    Tests for ``_run_chroot_process``.
+    """
+
+    def _get_filesystem(self, tmpdir):
+        """
+        Return the ``pathlib.Path`` of an extracted filesystem.
+
+        This filesystem ``.tar`` file was created with:
+
+        ```
+        $ docker run --name rootfs alpine ls
+        $ docker export rootfs > rootfs.tar
+        ```
+        """
+        rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
+        return _create_filesystem_dir(
+            image_url=rootfs.as_uri(),
+            parent=pathlib.Path(tmpdir.strpath),
+        )
+
+    def test_run_chroot_process(self, tmpdir):
+        """
+        A new process is created from the given arguments in a chroot jail
+        of the given filesystem path.
+        """
+        filesystem = self._get_filesystem(tmpdir=tmpdir)
+        _run_chroot_process(
+            filesystem=filesystem,
+            args=['touch', '/example.txt'],
+        )
+
+        # ``touch`` takes a short time to work.
+        time.sleep(0.01)
+        children = [item for item in filesystem.iterdir()]
+        assert filesystem.joinpath('example.txt') in children
+
+    def test_process_returned(self, tmpdir):
+        """
+        A new process with a new process ID is created, and the process object
+        is returned.
+        """
+        filesystem = self._get_filesystem(tmpdir=tmpdir)
+        old_pids = psutil.pids()
+        process = _run_chroot_process(
+            filesystem=filesystem,
+            args=['touch', '/example.txt'],
+        )
+        new_pids = set(psutil.pids()) - set(old_pids)
+        assert process.pid in new_pids

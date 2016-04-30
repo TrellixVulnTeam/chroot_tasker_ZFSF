@@ -46,5 +46,5 @@ pip install -e .[dev]
 Run tests:
 
 ```
-py.test
+sudo $(which py.test)
 ```
