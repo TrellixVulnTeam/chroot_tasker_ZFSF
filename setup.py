@@ -27,6 +27,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        yourscript=cli:cli
+        tasker=cli.cli:cli
     ''',
 )
