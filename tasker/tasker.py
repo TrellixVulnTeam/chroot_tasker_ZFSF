@@ -9,9 +9,11 @@ def _create_filesystem_dir(image_url, parent):
     ``.tar`` file.
 
     :param str image_url: The url of a ``.tar`` file.
+    :param pathlib.Path parent: The parent to extract the downloaded image
+        into.
 
     :rtype: pathlib.Path
-    :returns: The path to the extracted parent.
+    :returns: The path to the extracted image.
     """
     pass
 
