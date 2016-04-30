@@ -20,13 +20,13 @@ def cli():
 
 @cli.command('create')
 @click.argument('image_url')
-@click.argument('args', nargs=-1)
+@click.argument('args')
 def create(image_url, args):
     """
     Create a ``Task``.
     """
     Task(
         image_url=image_url,
-        args=list(args),
+        args=args.split(),
         parent=pathlib.Path(os.getcwd()),
     )

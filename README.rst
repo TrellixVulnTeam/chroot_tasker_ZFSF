@@ -28,7 +28,7 @@ To use ``tasker``:
 
 .. code:: sh
 
-   tasker create <IMAGE_URL> <COMMANDS>
+   tasker create <IMAGE_URL> "<COMMANDS>"
 
 Creating a ``chroot`` jail requires root priviledges.
 
@@ -36,7 +36,7 @@ One way to use this is:
 
 .. code:: sh
 
-   sudo $(which tasker) create <IMAGE_URL> <COMMANDS>
+   sudo $(which tasker) create <IMAGE_URL> "<COMMANDS>"
 
 Library
 -------
