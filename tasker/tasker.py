@@ -57,6 +57,8 @@ def _run_chroot_process(filesystem, args, stdin=subprocess.PIPE,
         stdout=stdout,
         stderr=stderr,
     )
+    # TODO Test that this is printed
+    print process.pid
     os.fchdir(real_root)
     os.chroot(".")
     os.close(real_root)
