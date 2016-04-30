@@ -4,7 +4,7 @@ Tests for ``cli.cli``.
 
 from click.testing import CliRunner
 
-from cli import cli
+from cli.cli import cli
 
 
 class TestCreate(object):
@@ -18,7 +18,7 @@ class TestCreate(object):
         """
         runner = CliRunner()
         passed = [
-            'createa',
+            'create',
             'http://example.com/foo.tar.gz',
             'echo 1',
         ]
