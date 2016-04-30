@@ -81,3 +81,16 @@ class TestCreateFilestystemDir(object):
 
         client_children = [item for item in client.iterdir()]
         assert client_children == [extracted_filesystem]
+
+
+class TestRunChrootProcess(object):
+    """
+    Tests for ``_run_chroot_process``.
+    """
+
+    def test_run_chroot_process(self):
+        """
+        A new process is created from the given arguments in a chroot jail
+        of the given filesystem path.
+        """
+        pass
