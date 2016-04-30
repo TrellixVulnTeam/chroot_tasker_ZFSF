@@ -3,6 +3,7 @@ CLI for creating and interacting with tasks.
 """
 
 import os
+import pathlib
 
 import click
 
@@ -25,7 +26,7 @@ def create(image_url, args):
     Create a ``Task``.
     """
     Task(
-        image_url=image_url,
+        image_url=pathlib.Path(image_url),
         args=list(args),
         parent=os.getcwd(),
     )

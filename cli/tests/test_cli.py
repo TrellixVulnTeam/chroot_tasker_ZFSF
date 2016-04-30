@@ -13,8 +13,9 @@ class TestCreate(object):
     def test_create_task(self):
         runner = CliRunner()
         passed = [
-            'create',
+            'createa',
             'http://example.com/foo.tar.gz',
             'echo 1',
         ]
-        runner.invoke(cli, passed)
+        result = runner.invoke(cli, passed)
+        assert result == 0
