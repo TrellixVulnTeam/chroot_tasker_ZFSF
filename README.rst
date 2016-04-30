@@ -90,7 +90,7 @@ This has been tested on Ubuntu 14.04 with Python 2.7.
 Tests
 -----
 
-Requires :Vagrant:`https://www.vagrantup.com`.
+Requires `Vagrant <https://www.vagrantup.com>`_.
 
 Create a Vagrant VM:
 
