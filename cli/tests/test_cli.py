@@ -15,6 +15,6 @@ class TestCreate(object):
         passed = [
             'create',
             'http://example.com/foo.tar.gz',
-            'tail -f',
+            'echo 1',
         ]
-        result = runner.invoke(cli, passed)
+        runner.invoke(cli, passed)
