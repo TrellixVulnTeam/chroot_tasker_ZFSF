@@ -16,7 +16,27 @@ https://gist.github.com/zeisss/4c28f6c31bcd756eec81.
 CLI
 ---
 
-TODO
+``tasker`` is a CLI for creating tasks which run in ``chroot`` jails.
+
+To install ``tasker``:
+
+.. code:: sh
+
+   pip install -e .
+
+To use ``tasker``:
+
+.. code:: sh
+
+   tasker create <IMAGE_URL> <COMMANDS>
+
+Creating a ``chroot`` jail requires root priviledges.
+
+One way to use this is:
+
+.. code:: sh
+
+   sudo $(which tasker) create <IMAGE_URL> <COMMANDS>
 
 Library
 -------
@@ -29,7 +49,7 @@ To install ``tasker``:
 
    pip install -e .
 
-To use tasker:
+To use ``tasker``:
 
 .. code:: python
 
@@ -53,6 +73,11 @@ To use tasker:
       args=args,
       parent=parent,
    )
+
+Supported platforms
+-------------------
+
+This has been tested on Ubuntu 14.04 with Python 2.7.
 
 Tests
 -----
