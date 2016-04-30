@@ -38,6 +38,11 @@ One way to use this is:
 
    sudo $(which tasker) create <IMAGE_URL> "<COMMANDS>"
 
+``tasker`` downloads the image from the given ``<IMAGE_URL>`` into the current working directory.
+Also in the directory, the image is untarred to create a "filesystem".
+The downloaded image is then deleted.
+The commands in ``"<COMMANDS>"`` are then run in a chroot jail, with the "filesystem" root as the root.
+
 Library
 -------
 
