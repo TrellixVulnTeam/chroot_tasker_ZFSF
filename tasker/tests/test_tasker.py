@@ -35,7 +35,7 @@ class TestCreateFilestystemDir(object):
         )
 
         assert extracted_filesystem.parent == client
-        # Assert that the extracted filesystem contains hello.txt
+        assert extracted_filesystem.joinpath('hello.txt').exists()
 
     def test_multiple_filesystems(self, tmpdir):
         """
@@ -61,7 +61,7 @@ class TestCreateFilestystemDir(object):
             parent=client,
         )
 
-        # Assert that the paths of the two extracted filesystems are not equal.
+        assert extracted_filesystem_1 != extracted_filesystem_2
 
     def test_image_removed(self, tmpdir):
         """
@@ -82,6 +82,8 @@ class TestCreateFilestystemDir(object):
             parent=client,
         )
 
+        client_files = [item for item in client.iterdir()]
+        assert client_files == []
         # Assert that the tar file is not at some location.
         # Separate tar creation out.
 
