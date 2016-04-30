@@ -26,7 +26,6 @@ class TestCreate(object):
         os.chdir(tmpdir.strpath)
 
         runner = CliRunner()
-        # TODO Generate this
         subcommand = 'create'
         commands = 'sleep 10'
         result = runner.invoke(cli, [subcommand, ROOTFS_URI, commands])
