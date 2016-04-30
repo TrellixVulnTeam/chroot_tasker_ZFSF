@@ -5,6 +5,7 @@ Tests for ``tasker.tasker``.
 import tarfile
 
 import pathlib
+import pytest
 
 from tasker.tasker import _create_filesystem_dir
 
@@ -14,19 +15,30 @@ class TestCreateFilestystemDir(object):
     Tests for ``_create_filesystem_dir``.
     """
 
-    def test_filesystem_dir_created(self, tmpdir):
+    def _create_tarfile(self, tmpdir):
         """
-        The given ``.tar`` file is downloaded and extracted to the given
-        parent.
+        Create a ``.tar`` file containing ``hello.txt`` when extracted.
+
+        :param tmpdir: The directory in which to create the archive and text
+            file.
+
+        :rtype: str
+        :return: URI of the tar file.
         """
-        server = tmpdir.mkdir('server')
-        filesystem = server.mkdir('filesystem')
-        text_file = filesystem.join("hello.txt")
+        text_file = tmpdir.join("hello.txt")
         text_file.write("content")
         tar_file = tmpdir.join('filesystem.tar')
         with tarfile.open(tar_file.strpath, 'w') as tar:
             tar.add(text_file.strpath, arcname=text_file.basename)
         image_url = pathlib.Path(tar_file.strpath).as_uri()
+        return image_url
+
+    def test_filesystem_dir_created(self, tmpdir):
+        """
+        The given ``.tar`` file is downloaded and extracted to the given
+        parent.
+        """
+        image_url = self._create_tarfile(tmpdir=tmpdir.mkdir('server'))
 
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem = _create_filesystem_dir(
@@ -41,14 +53,7 @@ class TestCreateFilestystemDir(object):
         """
         Multiple filesystem directories can exist from the same image.
         """
-        server = tmpdir.mkdir('server')
-        filesystem = server.mkdir('filesystem')
-        text_file = filesystem.join("hello.txt")
-        text_file.write("content")
-        tar_file = tmpdir.join('filesystem.tar')
-        with tarfile.open(tar_file.strpath, 'w') as tar:
-            tar.add(text_file.strpath, arcname=text_file.basename)
-        image_url = pathlib.Path(tar_file.strpath).as_uri()
+        image_url = self._create_tarfile(tmpdir=tmpdir.mkdir('server'))
 
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem_1 = _create_filesystem_dir(
@@ -67,14 +72,7 @@ class TestCreateFilestystemDir(object):
         """
         The downloaded image is deleted.
         """
-        server = tmpdir.mkdir('server')
-        filesystem = server.mkdir('filesystem')
-        text_file = filesystem.join("hello.txt")
-        text_file.write("content")
-        tar_file = tmpdir.join('filesystem.tar')
-        with tarfile.open(tar_file.strpath, 'w') as tar:
-            tar.add(text_file.strpath, arcname=text_file.basename)
-        image_url = pathlib.Path(tar_file.strpath).as_uri()
+        image_url = self._create_tarfile(tmpdir=tmpdir.mkdir('server'))
 
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem = _create_filesystem_dir(
@@ -84,9 +82,7 @@ class TestCreateFilestystemDir(object):
 
         client_files = [item for item in client.iterdir()]
         assert client_files == [extracted_filesystem]
-        # Separate tar creation out.
 
-import pytest
 
 @pytest.mark.skip('Not implemented yet')
 class TestTask(object):
@@ -99,6 +95,7 @@ class TestTask(object):
         A task can be created which starts a new process running a given
         command.
         """
+
 
 @pytest.mark.skip('Not implemented yet')
 class TestRunChrootProcess(object):
