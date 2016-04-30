@@ -26,7 +26,7 @@ def create(image_url, args):
     Create a ``Task``.
     """
     Task(
-        image_url=pathlib.Path(image_url),
+        image_url=image_url,
         args=list(args),
-        parent=os.getcwd(),
+        parent=pathlib.Path(os.getcwd()),
     )
