@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
-apt-get -y install python-virtualenv python-dev
+apt-get -y install \
+  # Convenient for managing dependencies.
+  python-virtualenv \
+  # Necessary for psutil.
+  python-dev
+
+# Install and configure virtualenvwrapper
 pip install virtualenvwrapper
 cat > /home/vagrant/.bashrc << "EOF"
 export WORKON_HOME=/home/vagrant/.virtualenvs
