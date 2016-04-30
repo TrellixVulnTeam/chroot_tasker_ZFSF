@@ -21,7 +21,38 @@ TODO
 Library
 -------
 
-TODO
+``tasker`` is a Python library.
+
+To install ``tasker``:
+
+.. code:: sh
+
+   pip install -e .
+
+To use tasker:
+
+.. code:: python
+
+   import os
+   import pathlib
+
+   from tasker.tasker import Task
+
+   # An image to download, extract and create a chroot jail in.
+   image_url = 'http://example.com/image.tar'
+
+   # The image will be downloaded and extracted into the parent.
+   parent = pathlib.Path(os.getcwd())
+
+   # See ``args`` at
+   # https://docs.python.org/2/library/subprocess.html#subprocess.Popen
+   args = ['echo', '1']
+
+   task = Task(
+      image_url=image_url,
+      args=args,
+      parent=parent,
+   )
 
 Tests
 -----
