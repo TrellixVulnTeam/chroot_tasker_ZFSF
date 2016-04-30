@@ -17,10 +17,7 @@ class TestCreate(object):
         It is possible to start a Task from the CLI.
         """
         runner = CliRunner()
-        passed = [
-            'create',
-            'http://example.com/foo.tar.gz',
-            'echo 1',
-        ]
+        image_url = 'file:///vagrant/tasker/tests/rootfs.tar'
+        passed = ['create', image_url, 'echo 1']
         result = runner.invoke(cli, passed)
         assert result == 0
