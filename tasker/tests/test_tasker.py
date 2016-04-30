@@ -8,6 +8,7 @@ import time
 import pathlib
 import psutil
 
+from common.testtools import ROOTFS_URI
 from tasker.tasker import _create_filesystem_dir, _run_chroot_process, Task
 
 
@@ -90,29 +91,16 @@ class TestRunChrootProcess(object):
     Tests for ``_run_chroot_process``.
     """
 
-    def _get_filesystem(self, tmpdir):
-        """
-        Return the ``pathlib.Path`` of an extracted filesystem.
-
-        This filesystem ``.tar`` file was created with:
-
-        ```
-        $ docker run --name rootfs alpine ls
-        $ docker export rootfs > rootfs.tar
-        ```
-        """
-        rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
-        return _create_filesystem_dir(
-            image_url=rootfs.as_uri(),
-            parent=pathlib.Path(tmpdir.strpath),
-        )
-
     def test_run_chroot_process(self, tmpdir):
         """
         A new process is created from the given arguments in a chroot jail
         of the given filesystem path.
         """
-        filesystem = self._get_filesystem(tmpdir=tmpdir)
+        filesystem = _create_filesystem_dir(
+            image_url=ROOTFS_URI,
+            parent=pathlib.Path(tmpdir.strpath),
+        )
+
         _run_chroot_process(
             filesystem=filesystem,
             args=['touch', '/example.txt'],
@@ -128,7 +116,11 @@ class TestRunChrootProcess(object):
         A new process with a new process ID is created, and the process object
         is returned.
         """
-        filesystem = self._get_filesystem(tmpdir=tmpdir)
+        filesystem = _create_filesystem_dir(
+            image_url=ROOTFS_URI,
+            parent=pathlib.Path(tmpdir.strpath),
+        )
+
         old_pids = psutil.pids()
         process = _run_chroot_process(
             filesystem=filesystem,
@@ -141,13 +133,17 @@ class TestRunChrootProcess(object):
         """
         By default there is a pipe to the standard I/O streams.
         """
-        filesystem = self._get_filesystem(tmpdir=tmpdir)
-        process_stdout = _run_chroot_process(
+        filesystem = _create_filesystem_dir(
+            image_url=ROOTFS_URI,
+            parent=pathlib.Path(tmpdir.strpath),
+        )
+
+        process = _run_chroot_process(
             filesystem=filesystem,
             args=['echo', '1'],
         )
 
-        assert process_stdout.stdout.read() == '1\n'
+        assert process.stdout.read() == '1\n'
 
 
 class TestTask(object):
@@ -155,13 +151,12 @@ class TestTask(object):
     Tests for ``Task``.
     """
 
-    def test_create_task(self):
+    def test_create_task(self, tmpdir):
         """
         A task can be created which starts a new process running a given
         command.
         """
-        rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
-        image_url = rootfs.as_uri()
         args = ['echo', '1']
-        task = Task(image_url=image_url, args=args)
-        assert isinstance(task._process.pid, int)
+        parent = pathlib.Path(tmpdir.strpath)
+        task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
+        assert isinstance(task.process.pid, int)

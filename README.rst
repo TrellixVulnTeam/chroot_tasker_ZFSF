@@ -13,6 +13,80 @@ Tasker
 This is a programming challenge for Giant Swarm specified at
 https://gist.github.com/zeisss/4c28f6c31bcd756eec81.
 
+CLI
+---
+
+``tasker`` is a CLI for creating tasks which run in ``chroot`` jails.
+
+To install ``tasker``:
+
+.. code:: sh
+
+   pip install -e .
+
+To use ``tasker``:
+
+.. code:: sh
+
+   tasker create <IMAGE_URL> "<COMMANDS>"
+
+Creating a ``chroot`` jail requires root priviledges.
+
+One way to use this is:
+
+.. code:: sh
+
+   $ sudo $(which tasker) create <IMAGE_URL> "<COMMANDS>"
+   8935 # This is the PID of the new process.
+
+``tasker`` downloads the image from the given ``<IMAGE_URL>`` into the current working directory.
+Also in the directory, the image is untarred to create a "filesystem".
+The downloaded image is then deleted.
+The commands in ``"<COMMANDS>"`` are then run in a chroot jail, with the "filesystem" root as the root.
+
+Library
+-------
+
+``tasker`` is a Python library.
+
+To install ``tasker``:
+
+.. code:: sh
+
+   pip install -e .
+
+To use ``tasker``:
+
+.. code:: python
+
+   import os
+   import pathlib
+
+   from tasker.tasker import Task
+
+   # An image to download, extract and create a chroot jail in.
+   image_url = 'http://example.com/image.tar'
+
+   # The image will be downloaded and extracted into the parent.
+   parent = pathlib.Path(os.getcwd())
+
+   # See ``args`` at
+   # https://docs.python.org/2/library/subprocess.html#subprocess.Popen
+   args = ['echo', '1']
+
+   task = Task(
+      image_url=image_url,
+      args=args,
+      parent=parent,
+   )
+
+   pid = task.process.pid
+
+Supported platforms
+-------------------
+
+This has been tested on Ubuntu 14.04 with Python 2.7.
+
 Tests
 -----
 
@@ -20,31 +94,62 @@ Requires :Vagrant:`https://www.vagrantup.com`.
 
 Create a Vagrant VM:
 
-```
-vagrant up
-```
+.. code:: sh
+
+   vagrant up
 
 SSH into the Vagrant box:
 
-```
-vagrant ssh
-```
+.. code:: sh
+
+   vagrant ssh
 
 In the Vagrant box, create a ``virtualenv``:
 
-```
-mkvirtualenv chroot_tasker
-```
+.. code:: sh
+
+   mkvirtualenv chroot_tasker
 
 Install the test dependencies:
 
-```
-cd /vagrant
-pip install -e .[dev]
-```
+.. code:: sh
+
+   cd /vagrant
+   pip install -e .[dev]
 
 Run tests:
 
-```
-sudo $(which py.test)
-```
+.. code:: sh
+
+   sudo $(which py.test)
+
+Design decisions
+----------------
+
+Language choice
+^^^^^^^^^^^^^^^
+
+I know Python and its ecosystem better than I do other languages,
+and so in the interest of speed this is written in Python.
+
+Parent directory
+^^^^^^^^^^^^^^^^
+
+There are at least three options for the directory in which to create the filesystem.
+
+1. A hardcoded directory, perhaps configurable in a configuration file.
+
+   This makes it difficult to create different filesystems in different places.
+   If the directory is hardcoded the chosen directory may not be suitable.
+
+2. The current working directory.
+
+   This allows for calling code to choose where to place the filesystems.
+
+3. Configurable as a command line option.
+
+   This alone requires more work to be put into each call.
+
+The current implementation is (2).
+Ideally there would be multiple of the above, with (2) as the default.
+The issue for this is https://github.com/adamtheturtle/chroot_tasker/issues/24.

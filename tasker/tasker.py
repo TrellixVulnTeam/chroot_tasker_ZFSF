@@ -44,6 +44,8 @@ def _run_chroot_process(filesystem, args, stdin=subprocess.PIPE,
     """
     Create a chroot jail and run a process in it.
 
+    Prints the PID of the new process.
+
     :param pathlib.Path filesystem: The directory which should be the root of
         the new process.
     :param list args: List of strings. See ``subprocess.Popen.args``.
@@ -68,7 +70,7 @@ class Task(object):
     A process in a chroot jail.
     """
 
-    def __init__(self, image_url, args, parent=pathlib.Path(os.getcwd())):
+    def __init__(self, image_url, args, parent):
         """
         Create a new task.
 
@@ -77,7 +79,7 @@ class Task(object):
             image_url=image_url,
             parent=parent,
         )
-        self._process = _run_chroot_process(
+        self.process = _run_chroot_process(
             filesystem=filesystem,
             args=args,
         )
