@@ -30,31 +30,31 @@ Requires :Vagrant:`https://www.vagrantup.com`.
 
 Create a Vagrant VM:
 
-```
-vagrant up
-```
+.. code:: sh
+
+   vagrant up
 
 SSH into the Vagrant box:
 
-```
-vagrant ssh
-```
+.. code:: sh
+
+   vagrant ssh
 
 In the Vagrant box, create a ``virtualenv``:
 
-```
-mkvirtualenv chroot_tasker
-```
+.. code:: sh
+
+   mkvirtualenv chroot_tasker
 
 Install the test dependencies:
 
-```
-cd /vagrant
-pip install -e .[dev]
-```
+.. code:: sh
+
+   cd /vagrant
+   pip install -e .[dev]
 
 Run tests:
 
-```
-sudo $(which py.test)
-```
+.. code:: sh
+
+   sudo $(which py.test)
