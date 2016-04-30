@@ -89,19 +89,29 @@ class TestRunChrootProcess(object):
     Tests for ``_run_chroot_process``.
     """
 
+    def _get_filesystem(self, tmpdir):
+        """
+        Return the ``pathlib.Path`` of an extracted filesystem.
+
+        This filesystem ``.tar`` file was created with:
+
+        ```
+        $ docker run --name rootfs alpine ls
+        $ docker export rootfs > rootfs.tar
+        ```
+        """
+        rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
+        return _create_filesystem_dir(
+            image_url=rootfs.as_uri(),
+            parent=pathlib.Path(tmpdir.strpath),
+        )
+
     def test_run_chroot_process(self, tmpdir):
         """
         A new process is created from the given arguments in a chroot jail
         of the given filesystem path.
         """
-        # This tar file was created with:
-        # $ docker run --name rootfs alpine ls
-        # $ docker export rootfs > rootfs.tar
-        rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
-        filesystem = _create_filesystem_dir(
-            image_url=rootfs.as_uri(),
-            parent=pathlib.Path(tmpdir.strpath),
-        )
+        filesystem = self._get_filesystem(tmpdir=tmpdir)
         _run_chroot_process(
             filesystem=filesystem,
             args=['touch', '/example.txt'],
@@ -111,3 +121,8 @@ class TestRunChrootProcess(object):
         time.sleep(0.01)
         children = [item for item in filesystem.iterdir()]
         assert filesystem.joinpath('example.txt') in children
+
+    def test_process_returned(self):
+        """
+        """
+        pass
