@@ -68,10 +68,16 @@ class Task(object):
     A process in a chroot jail.
     """
 
-    def __init__(self, image_url, args):
+    def __init__(self, image_url, args, parent=pathlib.Path(os.getcwd())):
         """
         Create a new task.
 
-        :rtype: None
         """
-        pass
+        filesystem = _create_filesystem_dir(
+            image_url=image_url,
+            parent=parent,
+        )
+        self._process = _run_chroot_process(
+            filesystem=filesystem,
+            args=args,
+        )
