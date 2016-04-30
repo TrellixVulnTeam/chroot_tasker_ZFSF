@@ -83,11 +83,12 @@ class TestCreateFilestystemDir(object):
         )
 
         client_files = [item for item in client.iterdir()]
-        assert client_files == []
-        # Assert that the tar file is not at some location.
+        assert client_files == [extracted_filesystem]
         # Separate tar creation out.
 
+import pytest
 
+@pytest.mark.skip('Not implemented yet')
 class TestTask(object):
     """
     Tests for ``Task``.
@@ -99,7 +100,7 @@ class TestTask(object):
         command.
         """
 
-
+@pytest.mark.skip('Not implemented yet')
 class TestRunChrootProcess(object):
     """
     Tests for ``_run_chroot_process``.

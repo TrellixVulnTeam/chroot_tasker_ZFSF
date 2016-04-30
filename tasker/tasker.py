@@ -2,6 +2,7 @@
 Create and interact with tasks in a chroot jail.
 """
 
+import tarfile
 import urllib2
 
 import pathlib
@@ -22,7 +23,15 @@ def _create_filesystem_dir(image_url, parent):
     image = urllib2.urlopen(image_url)
     # Use ``image.url`` below instead of image_url in case of a redirect.
     image_path = pathlib.Path(urllib2.urlparse.urlparse(image.url).path)
+    tar_file = parent.joinpath(image_path.name)
+    with open(str(tar_file), 'wb') as tf:
+        tf.write(image.read())
+
     filesystem_path = parent.joinpath(image_path.stem)
+    with tarfile.open(str(tar_file)) as tf:
+        tf.extractall(str(filesystem_path))
+
+    tar_file.unlink()
     return filesystem_path
 
 
