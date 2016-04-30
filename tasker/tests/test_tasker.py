@@ -6,7 +6,7 @@ import tarfile
 
 import pathlib
 
-from tasker.tasker import _create_filesystem_dir
+from tasker.tasker import _run_chroot_process, _create_filesystem_dir
 
 
 class TestCreateFilestystemDir(object):
@@ -88,9 +88,13 @@ class TestRunChrootProcess(object):
     Tests for ``_run_chroot_process``.
     """
 
-    def test_run_chroot_process(self):
+    def test_run_chroot_process(self, tmpdir):
         """
         A new process is created from the given arguments in a chroot jail
         of the given filesystem path.
         """
-        pass
+        _run_chroot_process(
+            filesystem=pathlib.Path(tmpdir.strpath),
+            args=['touch', '/example.txt'],
+        )
+        assert tmpdir.listdir() == [tmpdir.join('example.txt')]
