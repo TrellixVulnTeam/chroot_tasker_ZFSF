@@ -2,7 +2,7 @@
 Tests for ``tasker.tasker``.
 """
 
-from tasker.tasker import Task, _create_filesystem_dir
+from tasker.tasker import _create_filesystem_dir, _run_chroot_process, Task
 
 
 class TestCreateFilestystemDir(object):
@@ -38,7 +38,13 @@ class TestTask(object):
         command.
         """
 
-    def test_process_root(self):
+class TestRunChrootProcess(object):
+    """
+    Tests for ``_run_chroot_process``.
+    """
+
+    def test_run_chroot_process(self):
         """
-        A created task has a root of the
+        A new process is created from the given arguments in a chroot jail
+        of the given filesystem path.
         """
