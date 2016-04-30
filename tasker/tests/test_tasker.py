@@ -155,7 +155,7 @@ class TestTask(object):
     Tests for ``Task``.
     """
 
-    def test_create_task(self):
+    def test_create_task(self, tmpdir):
         """
         A task can be created which starts a new process running a given
         command.
@@ -163,5 +163,6 @@ class TestTask(object):
         rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
         image_url = rootfs.as_uri()
         args = ['echo', '1']
-        task = Task(image_url=image_url, args=args)
+        parent = pathlib.Path(tmpdir.strpath)
+        task = Task(image_url=image_url, args=args, parent=parent)
         assert isinstance(task._process.pid, int)
