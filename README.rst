@@ -16,9 +16,30 @@ https://gist.github.com/zeisss/4c28f6c31bcd756eec81.
 Tests
 -----
 
-Install test dependencies:
+Requires :Vagrant:`https://www.vagrantup.com`.
+
+Create a Vagrant VM:
 
 ```
+vagrant up
+```
+
+SSH into the Vagrant box:
+
+```
+vagrant ssh
+```
+
+In the Vagrant box, create a ``virtualenv``:
+
+```
+mkvirtualenv chroot_tasker
+```
+
+Install the test dependencies:
+
+```
+cd /vagrant
 pip install -e .[dev]
 ```
 
