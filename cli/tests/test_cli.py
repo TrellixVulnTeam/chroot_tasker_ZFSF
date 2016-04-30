@@ -8,7 +8,7 @@ import psutil
 
 from click.testing import CliRunner
 
-from cli.cli import cli, create
+from cli.cli import cli
 from common.testtools import ROOTFS_URI
 
 
