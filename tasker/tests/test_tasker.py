@@ -162,5 +162,6 @@ class TestTask(object):
         """
         rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
         image_url = rootfs.as_uri()
-        args = ['touch', '/example.txt']
+        args = ['echo', '1']
         task = Task(image_url=image_url, args=args)
+        assert isinstance(task._process.pid, int)
