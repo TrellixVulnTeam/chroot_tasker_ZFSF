@@ -80,8 +80,8 @@ class TestCreateFilestystemDir(object):
             parent=client,
         )
 
-        client_files = [item for item in client.iterdir()]
-        assert client_files == [extracted_filesystem]
+        client_children = [item for item in client.iterdir()]
+        assert client_children == [extracted_filesystem]
 
 
 @pytest.mark.skip('Not implemented yet')
