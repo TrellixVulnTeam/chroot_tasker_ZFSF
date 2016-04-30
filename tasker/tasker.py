@@ -39,7 +39,8 @@ def _create_filesystem_dir(image_url, parent):
     return filesystem_path
 
 
-def _run_chroot_process(filesystem, args):
+def _run_chroot_process(filesystem, args, stdin=subprocess.PIPE,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE):
     """
     Create a chroot jail and run a process in it.
 
@@ -51,8 +52,32 @@ def _run_chroot_process(filesystem, args):
     """
     real_root = os.open("/", os.O_RDONLY)
     os.chroot(str(filesystem))
-    process = subprocess.Popen(args=args)
+    process = subprocess.Popen(
+        args=args,
+        stdout=stdout,
+        stderr=stderr,
+    )
     os.fchdir(real_root)
     os.chroot(".")
     os.close(real_root)
     return process
+
+
+class Task(object):
+    """
+    A process in a chroot jail.
+    """
+
+    def __init__(self, image_url, args, parent=pathlib.Path(os.getcwd())):
+        """
+        Create a new task.
+
+        """
+        filesystem = _create_filesystem_dir(
+            image_url=image_url,
+            parent=parent,
+        )
+        self._process = _run_chroot_process(
+            filesystem=filesystem,
+            args=args,
+        )

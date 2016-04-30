@@ -8,7 +8,7 @@ import time
 import pathlib
 import psutil
 
-from tasker.tasker import _run_chroot_process, _create_filesystem_dir
+from tasker.tasker import _create_filesystem_dir, _run_chroot_process, Task
 
 
 class TestCreateFilestystemDir(object):
@@ -136,3 +136,32 @@ class TestRunChrootProcess(object):
         )
         new_pids = set(psutil.pids()) - set(old_pids)
         assert process.pid in new_pids
+
+    def test_default_io(self, tmpdir):
+        """
+        By default there is a pipe to the standard I/O streams.
+        """
+        filesystem = self._get_filesystem(tmpdir=tmpdir)
+        process_stdout = _run_chroot_process(
+            filesystem=filesystem,
+            args=['echo', '1'],
+        )
+
+        assert process_stdout.stdout.read() == '1\n'
+
+
+class TestTask(object):
+    """
+    Tests for ``Task``.
+    """
+
+    def test_create_task(self):
+        """
+        A task can be created which starts a new process running a given
+        command.
+        """
+        rootfs = pathlib.Path(__file__).with_name('rootfs.tar')
+        image_url = rootfs.as_uri()
+        args = ['echo', '1']
+        task = Task(image_url=image_url, args=args)
+        assert isinstance(task._process.pid, int)
