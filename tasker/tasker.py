@@ -47,7 +47,7 @@ def _run_chroot_process(filesystem, args):
         the new process.
     :param list args: List of strings. See ``subprocess.Popen.args``.
 
-    :return: ``None``.
+    :return subprocess.Popen: The newly started process.
     """
     real_root = os.open("/", os.O_RDONLY)
     os.chroot(str(filesystem))
