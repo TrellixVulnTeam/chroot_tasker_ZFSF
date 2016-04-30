@@ -2,6 +2,9 @@
      :target: https://requires.io/github/adamtheturtle/chroot_tasker/requirements/?branch=master
      :alt: Requirements Status
 
+.. image:: https://travis-ci.org/adamtheturtle/chroot_tasker.svg?branch=master
+    :target: https://travis-ci.org/adamtheturtle/chroot_tasker
+
 Tasker
 ------
 
