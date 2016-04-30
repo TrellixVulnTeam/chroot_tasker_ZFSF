@@ -8,4 +8,9 @@ before_script:
   - "flake8 ."
 script:
   # Run all discoverable tests
-  - "py.test"
+  - "py.test --cov=tasker"
+after_success:
+  # Sends the coverage report to coveralls.io which can report to Pull Requests
+  # and track test coverage over time.
+  - "coveralls"
+cache: pip
