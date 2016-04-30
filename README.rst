@@ -123,8 +123,30 @@ Run tests:
 Design decisions
 ----------------
 
+Language choice
+^^^^^^^^^^^^^^^
+
+I know Python and its ecosystem better than I do other languages,
+and so in the interest of speed this is written in Python.
+
+Parent directory
+^^^^^^^^^^^^^^^^
+
 There are at least three options for the directory in which to create the filesystem.
 
-1. A
-2. B
-3. C
+1. A hardcoded directory, perhaps configurable in a configuration file.
+
+   This makes it difficult to create different filesystems in different places.
+   If the directory is hardcoded the chosen directory may not be suitable.
+
+2. The current working directory.
+
+   This allows for calling code to choose where to place the filesystems.
+
+3. Configurable as a command line option.
+
+   This alone requires more work to be put into each call.
+
+The current implementation is (2).
+Ideally there would be multiple of the above, with (2) as the default.
+The issue for this is https://github.com/adamtheturtle/chroot_tasker/issues/24.

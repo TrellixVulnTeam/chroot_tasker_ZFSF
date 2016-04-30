@@ -19,7 +19,9 @@ class TestCreate(object):
         # OS change directory to tmpdir
         runner = CliRunner()
         image_url = 'file:///vagrant/tasker/tests/rootfs.tar'
-        passed = ['create', image_url, 'sleep 10000']
+        subcommand = 'create'
+        commands = 'sleep 10000'
+        passed = [subcommand, image_url, commands]
         result = runner.invoke(cli, passed)
         # Assert that the sleep comand is there
         # kill the sleep command.
