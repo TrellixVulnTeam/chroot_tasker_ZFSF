@@ -2,7 +2,9 @@
 Tests for ``tasker.tasker``.
 """
 
-from tasker.tasker import _create_filesystem_dir, _run_chroot_process, Task
+import tarfile
+
+from tasker.tasker import _create_filesystem_dir
 
 
 class TestCreateFilestystemDir(object):
@@ -10,11 +12,29 @@ class TestCreateFilestystemDir(object):
     Tests for ``_create_filesystem_dir``.
     """
 
-    def test_filesystem_dir_created(self):
+    def test_filesystem_dir_created(self, tmpdir):
         """
         The given ``.tar`` file is downloaded and extracted to the given
         parent.
         """
+        server = tmpdir.mkdir('server')
+        filesystem = server.mkdir('filesystem')
+        text_file = tmpdir.mkdir("sub").join("hello.txt")
+        text_file.write("content")
+        tar_file = tmpdir.join('filesystem.tar')
+        with tarfile.open(tar_file.strpath, 'w') as tar:
+            tar.add(filesystem.strpath, arcname=filesystem.basename)
+        image_url = 'file://' + tar_file.strpath
+
+        client = tmpdir.mkdir('client')
+        extracted_filesystem = _create_filesystem_dir(
+            image_url=image_url,
+            parent=client.strpath,
+        )
+
+        # Assert that the extracted filesystem's parent is client.
+        # Assert that the extracted filesystem contains hello.txt
+
 
     def test_multiple_filesystems(self):
         """
