@@ -4,6 +4,7 @@ Create and interact with tasks in a chroot jail.
 
 import tarfile
 import urllib2
+import uuid
 
 import pathlib
 
@@ -27,7 +28,8 @@ def _create_filesystem_dir(image_url, parent):
     with open(str(tar_file), 'wb') as tf:
         tf.write(image.read())
 
-    filesystem_path = parent.joinpath(image_path.stem)
+    unique_id = uuid.uuid4().hex
+    filesystem_path = parent.joinpath(image_path.stem + unique_id)
     with tarfile.open(str(tar_file)) as tf:
         tf.extractall(str(filesystem_path))
 
