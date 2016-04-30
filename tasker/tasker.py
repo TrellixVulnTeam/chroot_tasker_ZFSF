@@ -68,7 +68,7 @@ class Task(object):
     A process in a chroot jail.
     """
 
-    def __init__(self):
+    def __init__(self, image_url, args):
         """
         Create a new task.
 

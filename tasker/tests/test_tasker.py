@@ -8,7 +8,7 @@ import time
 import pathlib
 import psutil
 
-from tasker.tasker import _run_chroot_process, _create_filesystem_dir
+from tasker.tasker import _create_filesystem_dir, _run_chroot_process, Task
 
 
 class TestCreateFilestystemDir(object):
