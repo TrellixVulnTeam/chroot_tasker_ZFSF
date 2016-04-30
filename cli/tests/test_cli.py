@@ -30,9 +30,7 @@ class TestCreate(object):
         commands = 'sleep 10'
         result = runner.invoke(cli, [subcommand, ROOTFS_URI, commands])
 
-        # The PID of the new process is outputted.
-        [pid] = map(int, result.output.splitlines())
-        process = psutil.Process(pid)
+        process = psutil.Process(int(result.output))
         cmdline = process.cmdline()
         process.kill()
 

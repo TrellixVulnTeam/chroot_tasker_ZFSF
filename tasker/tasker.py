@@ -44,6 +44,8 @@ def _run_chroot_process(filesystem, args, stdin=subprocess.PIPE,
     """
     Create a chroot jail and run a process in it.
 
+    Prints the PID of the new process.
+
     :param pathlib.Path filesystem: The directory which should be the root of
         the new process.
     :param list args: List of strings. See ``subprocess.Popen.args``.
@@ -57,7 +59,6 @@ def _run_chroot_process(filesystem, args, stdin=subprocess.PIPE,
         stdout=stdout,
         stderr=stderr,
     )
-    # TODO Test that this is printed
     print process.pid
     os.fchdir(real_root)
     os.chroot(".")
