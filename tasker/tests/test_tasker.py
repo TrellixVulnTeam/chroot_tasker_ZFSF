@@ -136,3 +136,15 @@ class TestRunChrootProcess(object):
         )
         new_pids = set(psutil.pids()) - set(old_pids)
         assert process.pid in new_pids
+
+
+class TestTask(object):
+    """
+    Tests for ``Task``.
+    """
+
+    def test_create_task(self):
+        """
+        A task can be created which starts a new process running a given
+        command.
+        """

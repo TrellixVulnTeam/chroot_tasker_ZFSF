@@ -56,3 +56,17 @@ def _run_chroot_process(filesystem, args):
     os.chroot(".")
     os.close(real_root)
     return process
+
+
+class Task(object):
+    """
+    A process in a chroot jail.
+    """
+
+    def __init__(self):
+        """
+        Create a new task.
+
+        :rtype: None
+        """
+        pass
