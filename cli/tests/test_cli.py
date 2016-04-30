@@ -8,7 +8,7 @@ import psutil
 
 from click.testing import CliRunner
 
-from cli.cli import cli
+from cli.cli import cli, create
 from common.testtools import ROOTFS_URI
 
 
@@ -17,7 +17,7 @@ class TestCreate(object):
     Tests for creating a Task from the CLI.
     """
 
-    def test_create_task(self, tmpdir):
+    def test_create_task(self, tmpdir, capsys):
         """
         It is possible to start a Task from the CLI.
         """
@@ -29,7 +29,6 @@ class TestCreate(object):
         subcommand = 'create'
         commands = 'sleep 10'
         result = runner.invoke(cli, [subcommand, ROOTFS_URI, commands])
-
         process = psutil.Process(int(result.output))
         cmdline = process.cmdline()
         process.kill()

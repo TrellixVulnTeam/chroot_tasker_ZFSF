@@ -59,7 +59,6 @@ def _run_chroot_process(filesystem, args, stdin=subprocess.PIPE,
         stdout=stdout,
         stderr=stderr,
     )
-    print process.pid
     os.fchdir(real_root)
     os.chroot(".")
     os.close(real_root)
@@ -80,7 +79,7 @@ class Task(object):
             image_url=image_url,
             parent=parent,
         )
-        self._process = _run_chroot_process(
+        self.process = _run_chroot_process(
             filesystem=filesystem,
             args=args,
         )

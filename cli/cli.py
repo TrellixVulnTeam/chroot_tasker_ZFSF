@@ -25,8 +25,9 @@ def create(image_url, args):
     """
     Create a ``Task``.
     """
-    Task(
+    task = Task(
         image_url=image_url,
         args=args.split(),
         parent=pathlib.Path(os.getcwd()),
     )
+    print task.process.pid

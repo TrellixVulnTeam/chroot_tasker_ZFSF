@@ -145,23 +145,6 @@ class TestRunChrootProcess(object):
 
         assert process.stdout.read() == '1\n'
 
-    def test_pid_printed(self, tmpdir, capsys):
-        """
-        The new processes PID is printed.
-        """
-        filesystem = _create_filesystem_dir(
-            image_url=ROOTFS_URI,
-            parent=pathlib.Path(tmpdir.strpath),
-        )
-
-        process = _run_chroot_process(
-            filesystem=filesystem,
-            args=['touch', '/example.txt'],
-        )
-
-        out, err = capsys.readouterr()
-        assert process.pid == int(out)
-
 
 class TestTask(object):
     """
@@ -176,4 +159,4 @@ class TestTask(object):
         args = ['echo', '1']
         parent = pathlib.Path(tmpdir.strpath)
         task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
-        assert isinstance(task._process.pid, int)
+        assert isinstance(task.process.pid, int)
