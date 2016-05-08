@@ -159,7 +159,7 @@ class TestTask(object):
         """
         args = ['echo', '1']
         parent = pathlib.Path(tmpdir.strpath)
-        task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
+        task = Task(image_url=ROOTFS_URI, args=args, download_path=parent)
         assert isinstance(task.process.pid, int)
 
     def test_send_signal(self, tmpdir):
@@ -170,7 +170,7 @@ class TestTask(object):
         task = Task(
             image_url=ROOTFS_URI,
             args=['sleep', '100'],
-            parent=pathlib.Path(tmpdir.strpath),
+            download_path=pathlib.Path(tmpdir.strpath),
         )
         task.send_signal(signal.SIGINT)
         assert not psutil.pid_exists(task.process.pid)

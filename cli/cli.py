@@ -30,7 +30,7 @@ def create(image_url, args):
     task = Task(
         image_url=image_url,
         args=shlex.split(args),
-        parent=pathlib.Path(os.getcwd()),
+        download_path=pathlib.Path(os.getcwd()),
     )
 
     process = psutil.Process(task.process.pid)

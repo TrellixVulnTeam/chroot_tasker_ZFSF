@@ -78,7 +78,7 @@ class Task(object):
         self.process.send_signal(signal)
         os.wait()
 
-    def __init__(self, image_url, args, parent):
+    def __init__(self, image_url, args, download_path):
         """
         Create a new task.
 
@@ -86,7 +86,7 @@ class Task(object):
         """
         filesystem = _create_filesystem_dir(
             image_url=image_url,
-            parent=parent,
+            parent=download_path,
         )
 
         self.process = _run_chroot_process(
