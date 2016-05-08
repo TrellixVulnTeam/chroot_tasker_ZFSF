@@ -167,7 +167,10 @@ class TestTask(object):
 
 
         import shlex
-        script = "/bin/sh -c 'touch /example.txt'"
+        # trap 'touch /example.txt' INT
+        script = """
+        /bin/sh -c 'touch /example.txt'
+        """
         # script = "/bin/sh -c echo 1; while /usr/bin/true ; do sleep 30; done"
         args = shlex.split(script)
 
@@ -177,5 +180,6 @@ class TestTask(object):
         import signal
         # os.kill(process.pid, signal.SIGINT)
         process.send_signal(signal.SIGINT)
-        assert process.stdout.read() == '1\n'
-        pass
+        filesystem = [item for item in parent.iterdir()][0]
+        files = [item for item in filesystem.iterdir()]
+        assert filesystem.joinpath('example.txt') in files
