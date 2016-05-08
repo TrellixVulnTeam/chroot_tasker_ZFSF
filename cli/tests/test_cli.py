@@ -36,3 +36,10 @@ class TestCreate(object):
 
         assert result.exit_code == 0
         assert cmdline == commands.split()
+
+
+    def test_send_signal(self, tmpdir):
+        """
+        TODO
+        """
+        pass
