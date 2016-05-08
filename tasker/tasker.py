@@ -3,6 +3,7 @@ Create and interact with tasks in a chroot jail.
 """
 
 import os
+import signal
 import subprocess
 import tarfile
 import urllib2
@@ -70,6 +71,12 @@ class Task(object):
     A process in a chroot jail.
     """
 
+    def send_signal(self, signal, frame):
+        """
+        TODO
+        """
+        self.process.send_signal(signal)
+
     def __init__(self, image_url, args, parent):
         """
         Create a new task.
@@ -85,3 +92,5 @@ class Task(object):
             filesystem=filesystem,
             args=args,
         )
+
+        signal.signal(signal.SIGINT, self.send_signal)

@@ -175,7 +175,6 @@ class TestTask(object):
 
         parent = pathlib.Path(tmpdir.strpath)
         task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
-        time.sleep(0.01)
         process = task.process
         parent_id = psutil.Process(task.process.pid).ppid()
 
