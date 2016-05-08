@@ -4,6 +4,7 @@ CLI for creating and interacting with tasks.
 
 import os
 import pathlib
+import shlex
 
 import click
 
@@ -27,7 +28,7 @@ def create(image_url, args):
     """
     task = Task(
         image_url=image_url,
-        args=args.split(),
+        args=shlex.split(args),
         parent=pathlib.Path(os.getcwd()),
     )
     print task.process.pid
