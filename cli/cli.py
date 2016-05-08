@@ -34,5 +34,6 @@ def create(image_url, args):
     )
 
     process = psutil.Process(task.process.pid)
-    # TODO ppid?
-    print process.pid
+
+    # Print the process's parent id
+    print process.ppid()

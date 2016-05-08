@@ -29,9 +29,10 @@ class TestCreate(object):
         subcommand = 'create'
         commands = 'sleep 10'
         result = runner.invoke(cli, [subcommand, ROOTFS_URI, commands])
-        process = psutil.Process(int(result.output))
-        cmdline = process.cmdline()
-        process.kill()
+        parent_process = psutil.Process(int(result.output))
+        [child_process] = parent_process.children()
+        cmdline = child_process.cmdline()
+        child_process.kill()
 
         assert result.exit_code == 0
         assert cmdline == commands.split()
