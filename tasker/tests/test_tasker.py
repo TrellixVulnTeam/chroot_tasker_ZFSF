@@ -108,8 +108,7 @@ class TestRunChrootProcess(object):
 
         # ``touch`` takes a short time to work.
         time.sleep(0.01)
-        children = [item for item in filesystem.iterdir()]
-        assert filesystem.joinpath('example.txt') in children
+        assert filesystem.joinpath('example.txt').exists()
 
     def test_process_returned(self, tmpdir):
         """
@@ -176,6 +175,7 @@ class TestTask(object):
 
         parent = pathlib.Path(tmpdir.strpath)
         task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
+        time.sleep(0.01)
         process = task.process
         import signal
         # os.kill(process.pid, signal.SIGINT)
