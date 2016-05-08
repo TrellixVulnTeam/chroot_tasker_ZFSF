@@ -11,14 +11,14 @@ import uuid
 import pathlib
 
 
-def _create_filesystem_dir(image_url, parent):
+def _create_filesystem_dir(image_url, download_path):
     """
-    Download a ``.tar`` file, extract it into ``parent`` and delete the
+    Download a ``.tar`` file, extract it into ``download_path`` and delete the
     ``.tar`` file.
 
     :param str image_url: The url of a ``.tar`` file.
-    :param pathlib.Path parent: The parent to extract the downloaded image
-        into.
+    :param pathlib.Path download_path: The parent to extract the downloaded
+        image into.
 
     :rtype: pathlib.Path
     :returns: The path to the extracted image.
@@ -26,12 +26,12 @@ def _create_filesystem_dir(image_url, parent):
     image = urllib2.urlopen(image_url)
     # Use ``image.url`` below instead of image_url in case of a redirect.
     image_path = pathlib.Path(urllib2.urlparse.urlparse(image.url).path)
-    tar_file = parent.joinpath(image_path.name)
+    tar_file = download_path.joinpath(image_path.name)
     with open(str(tar_file), 'wb') as tf:
         tf.write(image.read())
 
     unique_id = uuid.uuid4().hex
-    filesystem_path = parent.joinpath(image_path.stem + unique_id)
+    filesystem_path = download_path.joinpath(image_path.stem + unique_id)
     with tarfile.open(str(tar_file)) as tf:
         tf.extractall(str(filesystem_path))
 
@@ -86,7 +86,7 @@ class Task(object):
         """
         filesystem = _create_filesystem_dir(
             image_url=image_url,
-            parent=download_path,
+            download_path=download_path,
         )
 
         self.process = _run_chroot_process(
