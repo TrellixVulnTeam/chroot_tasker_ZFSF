@@ -163,7 +163,8 @@ class TestTask(object):
 
     def test_send_signal(self, tmpdir):
         """
-        It is possible to send
+        Sending a ``SIGINT`` signal to ``task.send_signal`` kills the child
+        process.
         """
         task = Task(
             image_url=ROOTFS_URI,
