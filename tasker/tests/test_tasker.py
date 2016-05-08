@@ -163,34 +163,19 @@ class TestTask(object):
 
     def test_send_signal(self, tmpdir):
         # http://www.linuxjournal.com/article/10815
+        # http://www.tsheffler.com/blog/2010/11/21/python-multithreaded-daemon-with-sigterm-support-a-recipe/
+
+
         import shlex
-        script = """
-        sigquit()
-        {
-           echo "signal QUIT received"
-        }
-
-        sigint()
-        {
-           echo "signal INT received, script ending"
-           exit 0
-        }
-
-        trap 'sigquit' QUIT
-        trap 'sigint'  INT
-        trap ':'       HUP      # ignore the specified signals
-
-        echo "test script started. My PID is $$"
-        while /usr/bin/true ; do
-          sleep 30
-        done
-        """
-        script = """
-        trap -- '' SIGTSTP
-        """
-        # TODO use shlex for the split in the CLI
+        script = "/bin/sh -c 'touch /example.txt'"
+        # script = "/bin/sh -c echo 1; while /usr/bin/true ; do sleep 30; done"
         args = shlex.split(script)
 
         parent = pathlib.Path(tmpdir.strpath)
         task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
+        process = task.process
+        import signal
+        # os.kill(process.pid, signal.SIGINT)
+        process.send_signal(signal.SIGINT)
+        assert process.stdout.read() == '1\n'
         pass
