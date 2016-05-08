@@ -150,6 +150,7 @@ class TestTask(object):
     """
     Tests for ``Task``.
     """
+    # TODO add to README
 
     def test_create_task(self, tmpdir):
         """
