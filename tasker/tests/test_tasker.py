@@ -167,9 +167,7 @@ class TestTask(object):
 
         import shlex
         # trap 'touch /example.txt' INT
-        script = """
-        /bin/sh -c 'touch /example.txt'
-        """
+        script = 'sleep 100'
         # script = "/bin/sh -c echo 1; while /usr/bin/true ; do sleep 30; done"
         args = shlex.split(script)
 
@@ -177,9 +175,13 @@ class TestTask(object):
         task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
         time.sleep(0.01)
         process = task.process
-        import signal
-        # os.kill(process.pid, signal.SIGINT)
-        process.send_signal(signal.SIGINT)
-        filesystem = [item for item in parent.iterdir()][0]
-        files = [item for item in filesystem.iterdir()]
-        assert filesystem.joinpath('example.txt') in files
+        parent_id = psutil.Process(task.process.pid).ppid()
+        # parent_process = psutil.Process(parent_id)
+        import signal, os
+        os.kill(parent_id, signal.SIGINT)
+        assert psutil.pid_exists(process.pid)
+        # parent_process.send_signal(signal.SIGTERM)
+        assert not psutil.pid_exists(process.pid)
+        # filesystem = [item for item in parent.iterdir()][0]
+        # files = [item for item in filesystem.iterdir()]
+        # assert filesystem.joinpath('example.txt') in files
