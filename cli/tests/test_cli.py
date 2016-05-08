@@ -26,9 +26,8 @@ class TestCreate(object):
         os.chdir(tmpdir.strpath)
 
         runner = CliRunner()
-        subcommand = 'create'
         commands = 'sleep 10'
-        result = runner.invoke(cli, [subcommand, ROOTFS_URI, commands])
+        result = runner.invoke(cli, ['create', ROOTFS_URI, commands])
         parent_process = psutil.Process(int(result.output))
         [child_process] = parent_process.children()
         cmdline = child_process.cmdline()
@@ -37,9 +36,19 @@ class TestCreate(object):
         assert result.exit_code == 0
         assert cmdline == commands.split()
 
-
     def test_send_signal(self, tmpdir):
         """
         TODO
         """
-        pass
+        # Change directory to temporary directory so as not to pollute current
+        # working directory with downloaded filesystem.
+        os.chdir(tmpdir.strpath)
+
+        runner = CliRunner()
+        create = runner.invoke(cli, ['create', ROOTFS_URI, 'sleep 100'])
+        ppid_str = create.output
+
+        child_process = 'TODO'
+        assert psutil.pid_exists(child_process.pid)
+        runner.invoke(cli, ['signal', ppid_str, 'SIGTERM'])
+        assert not psutil.pid_exists(child_process.pid)
