@@ -74,6 +74,7 @@ class Task(object):
         """
         Create a new task.
 
+        :TODO: params, ivars
         """
         filesystem = _create_filesystem_dir(
             image_url=image_url,

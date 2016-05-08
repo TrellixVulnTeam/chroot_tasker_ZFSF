@@ -160,3 +160,6 @@ class TestTask(object):
         parent = pathlib.Path(tmpdir.strpath)
         task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
         assert isinstance(task.process.pid, int)
+
+    def test_send_signal(self, tmpdir):
+        pass
