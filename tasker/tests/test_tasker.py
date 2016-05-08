@@ -2,6 +2,9 @@
 Tests for ``tasker.tasker``.
 """
 
+import os
+import shlex
+import signal
 import tarfile
 import time
 
@@ -162,13 +165,12 @@ class TestTask(object):
 
     def test_send_signal(self, tmpdir):
         # http://www.linuxjournal.com/article/10815
-        # http://www.tsheffler.com/blog/2010/11/21/python-multithreaded-daemon-with-sigterm-support-a-recipe/
+        #
+        # http://www.tsheffler.com/blog/2010/11/21/python-multithreaded-
+        # daemon-with-sigterm-support-a-recipe/
 
 
-        import shlex
-        # trap 'touch /example.txt' INT
         script = 'sleep 100'
-        # script = "/bin/sh -c echo 1; while /usr/bin/true ; do sleep 30; done"
         args = shlex.split(script)
 
         parent = pathlib.Path(tmpdir.strpath)
@@ -176,12 +178,7 @@ class TestTask(object):
         time.sleep(0.01)
         process = task.process
         parent_id = psutil.Process(task.process.pid).ppid()
-        # parent_process = psutil.Process(parent_id)
-        import signal, os
-        os.kill(parent_id, signal.SIGINT)
+
         assert psutil.pid_exists(process.pid)
-        # parent_process.send_signal(signal.SIGTERM)
+        os.kill(parent_id, signal.SIGINT)
         assert not psutil.pid_exists(process.pid)
-        # filesystem = [item for item in parent.iterdir()][0]
-        # files = [item for item in filesystem.iterdir()]
-        # assert filesystem.joinpath('example.txt') in files
