@@ -42,6 +42,7 @@ def _create_filesystem_dir(image_url, parent):
 def _run_chroot_process(filesystem, args, stdin=subprocess.PIPE,
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE):
     """
+    # TODO Remove options for stdin, out, err
     Create a chroot jail and run a process in it.
 
     Prints the PID of the new process.
