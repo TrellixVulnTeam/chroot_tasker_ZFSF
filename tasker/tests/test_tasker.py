@@ -2,8 +2,6 @@
 Tests for ``tasker.tasker``.
 """
 
-import os
-import shlex
 import signal
 import tarfile
 import time
@@ -165,16 +163,12 @@ class TestTask(object):
 
     def test_send_signal(self, tmpdir):
         """
-        TODO
+        It is possible to send
         """
-        script = 'sleep 100'
-        args = shlex.split(script)
-
-        parent = pathlib.Path(tmpdir.strpath)
-        task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
-        process = task.process
-        parent_id = psutil.Process(task.process.pid).ppid()
-
-        assert psutil.pid_exists(process.pid)
-        os.kill(parent_id, signal.SIGTERM)
-        assert not psutil.pid_exists(process.pid)
+        task = Task(
+            image_url=ROOTFS_URI,
+            args=['sleep', '100'],
+            parent=pathlib.Path(tmpdir.strpath),
+        )
+        task.send_signal(signal.SIGINT)
+        assert not psutil.pid_exists(task.process.pid)
