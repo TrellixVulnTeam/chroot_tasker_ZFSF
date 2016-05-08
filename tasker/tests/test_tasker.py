@@ -164,12 +164,9 @@ class TestTask(object):
         assert isinstance(task.process.pid, int)
 
     def test_send_signal(self, tmpdir):
-        # http://www.linuxjournal.com/article/10815
-        #
-        # http://www.tsheffler.com/blog/2010/11/21/python-multithreaded-
-        # daemon-with-sigterm-support-a-recipe/
-
-
+        """
+        TODO
+        """
         script = 'sleep 100'
         args = shlex.split(script)
 
@@ -179,5 +176,5 @@ class TestTask(object):
         parent_id = psutil.Process(task.process.pid).ppid()
 
         assert psutil.pid_exists(process.pid)
-        os.kill(parent_id, signal.SIGINT)
+        os.kill(parent_id, signal.SIGTERM)
         assert not psutil.pid_exists(process.pid)

@@ -76,6 +76,7 @@ class Task(object):
         TODO
         """
         self.process.send_signal(signal)
+        os.wait()
 
     def __init__(self, image_url, args, parent):
         """
@@ -93,4 +94,4 @@ class Task(object):
             args=args,
         )
 
-        signal.signal(signal.SIGINT, self.send_signal)
+        signal.signal(signal.SIGTERM, self.send_signal)
