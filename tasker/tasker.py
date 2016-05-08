@@ -80,6 +80,7 @@ class Task(object):
             image_url=image_url,
             parent=parent,
         )
+
         self.process = _run_chroot_process(
             filesystem=filesystem,
             args=args,

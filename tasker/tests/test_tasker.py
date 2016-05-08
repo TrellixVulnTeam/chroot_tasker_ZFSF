@@ -162,4 +162,35 @@ class TestTask(object):
         assert isinstance(task.process.pid, int)
 
     def test_send_signal(self, tmpdir):
+        # http://www.linuxjournal.com/article/10815
+        import shlex
+        script = """
+        sigquit()
+        {
+           echo "signal QUIT received"
+        }
+
+        sigint()
+        {
+           echo "signal INT received, script ending"
+           exit 0
+        }
+
+        trap 'sigquit' QUIT
+        trap 'sigint'  INT
+        trap ':'       HUP      # ignore the specified signals
+
+        echo "test script started. My PID is $$"
+        while /usr/bin/true ; do
+          sleep 30
+        done
+        """
+        script = """
+        trap -- '' SIGTSTP
+        """
+        # TODO use shlex for the split in the CLI
+        args = shlex.split(script)
+
+        parent = pathlib.Path(tmpdir.strpath)
+        task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
         pass

@@ -153,3 +153,11 @@ There are at least three options for the directory in which to create the filesy
 The current implementation is (2).
 Ideally there would be multiple of the above, with (2) as the default.
 The issue for this is https://github.com/adamtheturtle/chroot_tasker/issues/24.
+
+Identifiers
+^^^^^^^^^^^
+
+This uses PIDs as identifiers.
+This is not safe - PIDs get reused and so this could end up with a user manipulating the wrong process.
+This was a simple to implement strategy.
+A long term solution might be stateful and have a mapping of tasks to unique identifiers.
