@@ -5,14 +5,12 @@ Tests for ``cli.cli``.
 import os
 
 from click.testing import CliRunner
-import pytest
 
 from cli.cli import cli
 from common.testtools import ROOTFS_URI
 from tasker.tasker import Task
 
 
-@pytest.skip()
 class TestCreate(object):
     """
     Tests for creating a Task from the CLI.
@@ -31,7 +29,7 @@ class TestCreate(object):
         result = runner.invoke(cli, ['create', ROOTFS_URI, commands])
         assert result.exit_code == 0
 
-        task = Task(existing_id=int(result.output))._process.cmdline()
+        task = Task(existing_task=int(result.output))
         assert task._process.cmdline() == commands.split()
 
     def test_send_signal_healthcheck(self, tmpdir):
@@ -47,7 +45,7 @@ class TestCreate(object):
         create = runner.invoke(cli, ['create', ROOTFS_URI, 'sleep 100'])
         task_id = create.output
 
-        healthcheck = runner.invoke(cli, ['healthcheck', task_id])
-        assert healthcheck.output == ''
+        healthcheck = runner.invoke(cli, ['health_check', task_id])
+        assert healthcheck.output == 'TODO'
         runner.invoke(cli, ['signal', task_id, 'SIGTERM'])
-        assert healthcheck.output == ''
+        assert healthcheck.output == 'TODO'
