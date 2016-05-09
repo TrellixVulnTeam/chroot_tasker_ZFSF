@@ -36,7 +36,7 @@ class TestCreate(object):
 
     def test_send_signal(self, tmpdir):
         """
-        TODO
+        Sending a SIGTERM signal to a task stops the process running.
         """
         # Change directory to temporary directory so as not to pollute current
         # working directory with downloaded filesystem.
@@ -52,6 +52,9 @@ class TestCreate(object):
         # assert not psutil.pid_exists(child_process.pid)
 
     def test_health_check(self, tmpdir):
+        """
+        The status of a given task can be printed.
+        """
         os.chdir(tmpdir.strpath)
 
         runner = CliRunner()
