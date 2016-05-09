@@ -78,10 +78,14 @@ class Task(object):
         :rtype: dict
         :returns: The task's process's status.
         """
-        try:
-            return {'exists': True, 'status': self._process.status()}
-        except psutil.NoSuchProcess:
-            return {'exists': False, 'status': None}
+        if self._process is not None:
+            try:
+                status = self._process.status()
+                return {'exists': True, 'status': status}
+            except psutil.NoSuchProcess:
+                pass
+
+        return {'exists': False, 'status': None}
 
     def send_signal(self, signal):
         """
@@ -108,7 +112,11 @@ class Task(object):
         :ivar int id: An identifier for the task.
         """
         if existing_task is not None:
-            self._process = psutil.Process(existing_task)
+            try:
+                self._process = psutil.Process(existing_task)
+            except psutil.NoSuchProcess:
+                self._process = None
+
             self.id = existing_task
         else:
             filesystem = _create_filesystem_dir(
