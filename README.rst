@@ -45,6 +45,7 @@ One way to use this is:
    $ sudo $(which tasker) send_signal SIGINT
    $ sudo $(which tasker) healthcheck 8935
    # TODO should the parent die in this case?
+   # TODO update appropriately for output now, manually test
    Status: X
    Time: Y
 

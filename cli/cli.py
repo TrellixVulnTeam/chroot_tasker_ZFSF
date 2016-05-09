@@ -6,6 +6,8 @@ import os
 import pathlib
 import shlex
 
+from signal import Signals
+
 import click
 
 from tasker.tasker import Task
@@ -63,3 +65,5 @@ def send_signal(task_id, signal):
     :param str task_id: The id of an existing task.
     :param str signal: The signal to send.
     """
+    task = Task(existing_task=int(task_id))
+    task.send_signal(Signals[signal])
