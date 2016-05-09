@@ -71,6 +71,15 @@ class Task(object):
     A process in a chroot jail.
     """
 
+    def get_health(self):
+        """
+        TODO
+        """
+        # TODO Add other things like uptime
+        return {
+            'Running': self.process.is_alive(),
+        }
+
     def send_signal(self, signal):
         """
         TODO
