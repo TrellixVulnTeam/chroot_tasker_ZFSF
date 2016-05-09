@@ -28,10 +28,8 @@ class TestCreate(object):
         runner = CliRunner()
         commands = 'sleep 10'
         result = runner.invoke(cli, ['create', ROOTFS_URI, commands])
-        parent_process = psutil.Process(int(result.output))
-        [child_process] = parent_process.children()
+        child_process = psutil.Process(int(result.output))
         cmdline = child_process.cmdline()
-        child_process.kill()
 
         assert result.exit_code == 0
         assert cmdline == commands.split()

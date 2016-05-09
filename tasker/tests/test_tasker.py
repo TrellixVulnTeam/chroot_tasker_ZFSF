@@ -162,7 +162,7 @@ class TestTask(object):
             args=['echo', '1'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
-        assert isinstance(task.process.pid, int)
+        assert isinstance(task.id, int)
 
     def test_send_signal(self, tmpdir):
         """
@@ -175,7 +175,8 @@ class TestTask(object):
             download_path=pathlib.Path(tmpdir.strpath),
         )
         task.send_signal(signal.SIGINT)
-        assert not psutil.pid_exists(task.process.pid)
+        # TODO, instead use healthcheck
+        assert not psutil.pid_exists(task.id)
 
     def test_healthcheck(self, tmpdir):
         """
@@ -187,5 +188,4 @@ class TestTask(object):
             download_path=pathlib.Path(tmpdir.strpath),
         )
         health = task.get_health()
-        # TODO use freezetime to check uptime?
-        assert health == {'Running': True}
+        assert health == {'status': 'running'}

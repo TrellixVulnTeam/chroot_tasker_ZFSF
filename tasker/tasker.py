@@ -3,6 +3,7 @@ Create and interact with tasks in a chroot jail.
 """
 
 import os
+import psutil
 import subprocess
 import tarfile
 import urllib2
@@ -75,16 +76,15 @@ class Task(object):
         """
         TODO
         """
-        # TODO Add other things like uptime
         return {
-            'Running': self.process.is_alive(),
+            'status': self._process.status(),
         }
 
     def send_signal(self, signal):
         """
         TODO
         """
-        self.process.send_signal(signal)
+        self._process.send_signal(signal)
         os.wait()
 
     def __init__(self, image_url, args, download_path):
@@ -98,7 +98,10 @@ class Task(object):
             download_path=download_path,
         )
 
-        self.process = _run_chroot_process(
+        process = _run_chroot_process(
             filesystem=filesystem,
             args=args,
         )
+
+        self.id = process.pid
+        self._process = psutil.Process(self.id)
