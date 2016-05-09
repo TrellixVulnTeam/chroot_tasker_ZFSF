@@ -179,7 +179,8 @@ class TestTask(object):
 
     def test_healthcheck(self, tmpdir):
         """
-        TODO
+        A dictionary describing the status of the process is returned by
+        ``Task.get_health``.
         """
         task = Task(
             image_url=ROOTFS_URI,
