@@ -157,9 +157,11 @@ class TestTask(object):
         A task can be created which starts a new process running a given
         command.
         """
-        args = ['echo', '1']
-        parent = pathlib.Path(tmpdir.strpath)
-        task = Task(image_url=ROOTFS_URI, args=args, download_path=parent)
+        task = Task(
+            image_url=ROOTFS_URI,
+            args=['echo', '1'],
+            download_path=pathlib.Path(tmpdir.strpath),
+        )
         assert isinstance(task.process.pid, int)
 
     def test_send_signal(self, tmpdir):
