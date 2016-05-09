@@ -40,4 +40,4 @@ def create(image_url, args):
     print process.ppid()
 
 # TODO healthcheck
-# TODO sendsignal
+# TODO sendsignal - with error handling?
