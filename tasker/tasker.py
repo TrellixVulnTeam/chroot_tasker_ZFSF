@@ -76,9 +76,7 @@ class Task(object):
         """
         TODO
         """
-        return {
-            'status': self._process.status(),
-        }
+        return {'status': self._process.status()}
 
     def send_signal(self, signal):
         """
