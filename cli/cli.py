@@ -25,6 +25,10 @@ def cli():
 def create(image_url, args):
     """
     Create a ``Task``.
+
+    :param str image_url: The URL (or URI) pointing to an image to download,
+        extract and use as the root of a new process.
+    :param str args: Commands to run as a new process.
     """
     task = Task(
         image_url=image_url,
@@ -39,7 +43,9 @@ def create(image_url, args):
 @click.argument('task_id')
 def health_check(task_id):
     """
-    TODO
+    Check the health of a task.
+
+    :param str task_id: The id of an existing task.
     """
 
 
@@ -48,5 +54,8 @@ def health_check(task_id):
 @click.argument('signal')
 def send_signal(task_id, signal):
     """
-    TODO
+    Send a signal to a process started by an existing task.
+
+    :param str task_id: The id of an existing task.
+    :param str signal: The signal to send.
     """
