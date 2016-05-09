@@ -143,7 +143,7 @@ class TestRunChrootProcess(object):
             args=['echo', '1'],
         )
 
-        assert process.stdout.read() == '1\n'
+        assert process.stdout.read() == b'1\n'
 
 
 class TestTask(object):
