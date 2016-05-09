@@ -33,7 +33,11 @@ def create(image_url, args):
         download_path=pathlib.Path(os.getcwd()),
     )
 
+    # TODO Don't do this, have a direct .task_id on the task
     process = psutil.Process(task.process.pid)
 
     # Print the process's parent id
     print process.ppid()
+
+# TODO healthcheck
+# TODO sendsignal
