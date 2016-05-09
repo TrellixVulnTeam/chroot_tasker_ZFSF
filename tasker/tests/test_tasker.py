@@ -39,7 +39,7 @@ class TestCreateFilestystemDir(object):
     def test_filesystem_dir_created(self, tmpdir):
         """
         The given ``.tar`` file is downloaded and extracted to the given
-        parent.
+        download path.
         """
         image_url = self._create_tarfile(tmpdir=tmpdir.mkdir('server'))
 
