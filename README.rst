@@ -100,12 +100,7 @@ To use ``tasker``:
 Supported platforms
 -------------------
 
-This has been tested on Ubuntu 15.04 with Python 3.5.
-
-# TODO check ubuntu16.04's default Python 3
-# if it is 3.5+ then try using python3 for new signal stuff
-# remove pathlib dependency
-# change tox to use python3
+This has been tested on Ubuntu 14.04 with Python 3.5.
 
 Tests
 -----
