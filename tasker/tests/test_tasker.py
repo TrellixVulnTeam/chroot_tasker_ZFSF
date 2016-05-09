@@ -38,14 +38,14 @@ class TestCreateFilestystemDir(object):
     def test_filesystem_dir_created(self, tmpdir):
         """
         The given ``.tar`` file is downloaded and extracted to the given
-        parent.
+        download path.
         """
         image_url = self._create_tarfile(tmpdir=tmpdir.mkdir('server'))
 
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem = _create_filesystem_dir(
             image_url=image_url,
-            parent=client,
+            download_path=client,
         )
 
         assert extracted_filesystem.parent == client
@@ -60,12 +60,12 @@ class TestCreateFilestystemDir(object):
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem_1 = _create_filesystem_dir(
             image_url=image_url,
-            parent=client,
+            download_path=client,
         )
 
         extracted_filesystem_2 = _create_filesystem_dir(
             image_url=image_url,
-            parent=client,
+            download_path=client,
         )
 
         assert extracted_filesystem_1 != extracted_filesystem_2
@@ -79,7 +79,7 @@ class TestCreateFilestystemDir(object):
         client = pathlib.Path(tmpdir.mkdir('client').strpath)
         extracted_filesystem = _create_filesystem_dir(
             image_url=image_url,
-            parent=client,
+            download_path=client,
         )
 
         client_children = [item for item in client.iterdir()]
@@ -98,7 +98,7 @@ class TestRunChrootProcess(object):
         """
         filesystem = _create_filesystem_dir(
             image_url=ROOTFS_URI,
-            parent=pathlib.Path(tmpdir.strpath),
+            download_path=pathlib.Path(tmpdir.strpath),
         )
 
         _run_chroot_process(
@@ -118,7 +118,7 @@ class TestRunChrootProcess(object):
         """
         filesystem = _create_filesystem_dir(
             image_url=ROOTFS_URI,
-            parent=pathlib.Path(tmpdir.strpath),
+            download_path=pathlib.Path(tmpdir.strpath),
         )
 
         old_pids = psutil.pids()
@@ -135,7 +135,7 @@ class TestRunChrootProcess(object):
         """
         filesystem = _create_filesystem_dir(
             image_url=ROOTFS_URI,
-            parent=pathlib.Path(tmpdir.strpath),
+            download_path=pathlib.Path(tmpdir.strpath),
         )
 
         process = _run_chroot_process(
@@ -156,7 +156,9 @@ class TestTask(object):
         A task can be created which starts a new process running a given
         command.
         """
-        args = ['echo', '1']
-        parent = pathlib.Path(tmpdir.strpath)
-        task = Task(image_url=ROOTFS_URI, args=args, parent=parent)
+        task = Task(
+            image_url=ROOTFS_URI,
+            args=['echo', '1'],
+            download_path=pathlib.Path(tmpdir.strpath),
+        )
         assert isinstance(task.process.pid, int)

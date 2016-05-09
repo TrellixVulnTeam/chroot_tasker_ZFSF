@@ -67,8 +67,8 @@ To use ``tasker``:
    # An image to download, extract and create a chroot jail in.
    image_url = 'http://example.com/image.tar'
 
-   # The image will be downloaded and extracted into the parent.
-   parent = pathlib.Path(os.getcwd())
+   # The image will be downloaded and extracted into the download_path.
+   download_path = pathlib.Path(os.getcwd())
 
    # See ``args`` at
    # https://docs.python.org/2/library/subprocess.html#subprocess.Popen
@@ -77,7 +77,7 @@ To use ``tasker``:
    task = Task(
       image_url=image_url,
       args=args,
-      parent=parent,
+      download_path=download_path,
    )
 
    pid = task.process.pid
