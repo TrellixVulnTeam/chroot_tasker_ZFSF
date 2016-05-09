@@ -187,5 +187,5 @@ class TestTask(object):
             download_path=pathlib.Path(tmpdir.strpath),
         )
         health = task.get_health()
-        # TODO use freezetime?
-        assert health == {'Running': True, 'Time': '00:47'}
+        # TODO use freezetime to check uptime?
+        assert health == {'Running': True}
