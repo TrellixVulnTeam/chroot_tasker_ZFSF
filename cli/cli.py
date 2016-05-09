@@ -28,6 +28,6 @@ def create(image_url, args):
     task = Task(
         image_url=image_url,
         args=args.split(),
-        parent=pathlib.Path(os.getcwd()),
+        download_path=pathlib.Path(os.getcwd()),
     )
     print(task.process.pid)
