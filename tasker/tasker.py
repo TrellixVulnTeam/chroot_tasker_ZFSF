@@ -74,13 +74,18 @@ class Task(object):
 
     def get_health(self):
         """
-        TODO
+        Get details of the task's health.
+
+        :rtype: dict
+        :returns: The task's process's status.
         """
         return {'status': self._process.status()}
 
     def send_signal(self, signal):
         """
-        TODO
+        Send a signal to the task's process.
+
+        :param int signal: The signal to send.
         """
         self._process.send_signal(signal)
         os.wait()
