@@ -77,7 +77,10 @@ class Task(object):
         :rtype: dict
         :returns: The task's process's status.
         """
-        return {'status': self._process.status()}
+        try:
+            return {'exists': True, 'status': self._process.status()}
+        except psutil.NoSuchProcess:
+            return {'exists': False, 'status': None}
 
     def send_signal(self, signal):
         """

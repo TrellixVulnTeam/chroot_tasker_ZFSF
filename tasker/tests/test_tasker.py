@@ -173,19 +173,6 @@ class TestTask(object):
             args=['sleep', '100'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
+        assert task.get_health() == {'exists': True, 'status': 'running'}
         task.send_signal(signal.SIGINT)
-        # TODO, instead use healthcheck
-        assert not psutil.pid_exists(task.id)
-
-    def test_healthcheck(self, tmpdir):
-        """
-        A dictionary describing the status of the process is returned by
-        ``Task.get_health``.
-        """
-        task = Task(
-            image_url=ROOTFS_URI,
-            args=['sleep', '100'],
-            download_path=pathlib.Path(tmpdir.strpath),
-        )
-        health = task.get_health()
-        assert health == {'status': 'running'}
+        assert task.get_health() == {'exists': False, 'status': None}
