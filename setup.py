@@ -1,7 +1,6 @@
 from setuptools import setup, find_packages
 
 with open("requirements.txt") as requirements:
-    # TODO Support python 3 by removing pathlib if it is here
     install_requires = requirements.readlines()
 
 with open("dev-requirements.txt") as dev_requirements:
