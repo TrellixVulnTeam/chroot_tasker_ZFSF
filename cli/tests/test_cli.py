@@ -16,7 +16,7 @@ class TestCreate(object):
     Tests for creating a Task from the CLI.
     """
 
-    def test_create_task(self, tmpdir, capsys):
+    def test_create_task(self, tmpdir):
         """
         It is possible to start a Task from the CLI.
         """
@@ -46,6 +46,6 @@ class TestCreate(object):
         task_id = create.output
 
         healthcheck = runner.invoke(cli, ['health_check', task_id])
-        assert healthcheck.output == 'TODO'
+        assert healthcheck.output == 'exists: True\nstatus: running\n'
         runner.invoke(cli, ['signal', task_id, 'SIGTERM'])
-        assert healthcheck.output == 'TODO'
+        assert healthcheck.output == 'exists: False'

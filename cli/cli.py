@@ -47,6 +47,10 @@ def health_check(task_id):
 
     :param str task_id: The id of an existing task.
     """
+    task = Task(existing_task=int(task_id))
+    health = task.get_health()
+    print 'exists:', health['exists']
+    print 'status:', health['status']
 
 
 @cli.command('send_signal')
