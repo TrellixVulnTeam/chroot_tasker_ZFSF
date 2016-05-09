@@ -151,17 +151,16 @@ class TestTask(object):
     Tests for ``Task``.
     """
 
-    def test_create_task(self, tmpdir):
+    def test_create(self, tmpdir):
         """
-        A task can be created which starts a new process running a given
-        command.
+        It is possible to create a new process.
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['echo', '1'],
+            args=['sleep', '5'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
-        assert isinstance(task.id, int)
+        assert task.get_health() == {'exists': True, 'status': 'running'}
 
     def test_send_signal(self, tmpdir):
         """
@@ -170,9 +169,13 @@ class TestTask(object):
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['sleep', '100'],
+            args=['sleep', '5'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
-        assert task.get_health() == {'exists': True, 'status': 'running'}
         task.send_signal(signal.SIGINT)
         assert task.get_health() == {'exists': False, 'status': None}
+
+    def test_existing_task(self, tmpdir):
+        """
+        It is possible to get an existing task by its id.
+        """

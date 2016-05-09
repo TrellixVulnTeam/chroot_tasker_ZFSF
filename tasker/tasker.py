@@ -91,7 +91,8 @@ class Task(object):
         self._process.send_signal(signal)
         os.wait()
 
-    def __init__(self, image_url, args, download_path):
+    def __init__(self, image_url=None, args=None, download_path=None,
+                 existing_task=None):
         """
         Create a new task, which is a process running inside a chroot with root
         being a downloaded image's root.
