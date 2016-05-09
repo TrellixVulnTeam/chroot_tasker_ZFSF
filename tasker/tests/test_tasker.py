@@ -150,7 +150,6 @@ class TestTask(object):
     """
     Tests for ``Task``.
     """
-    # TODO Factor out task creation?
 
     def test_create_task(self, tmpdir):
         """
