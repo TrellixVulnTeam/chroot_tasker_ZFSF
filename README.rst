@@ -85,7 +85,7 @@ To use ``tasker``:
 Supported platforms
 -------------------
 
-This has been tested on Ubuntu 14.04 with Python 2.7.
+This has been tested on Ubuntu 14.04 with Python 3.5.
 
 Tests
 -----
@@ -108,7 +108,7 @@ In the Vagrant box, create a ``virtualenv``:
 
 .. code:: sh
 
-   mkvirtualenv chroot_tasker
+   mkvirtualenv -p python3.5 chroot_tasker
 
 Install the test dependencies:
 

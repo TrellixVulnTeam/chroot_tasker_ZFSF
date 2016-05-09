@@ -5,7 +5,8 @@ Create and interact with tasks in a chroot jail.
 import os
 import subprocess
 import tarfile
-import urllib2
+import urllib.parse
+import urllib.request
 import uuid
 
 import pathlib
@@ -23,9 +24,9 @@ def _create_filesystem_dir(image_url, parent):
     :rtype: pathlib.Path
     :returns: The path to the extracted image.
     """
-    image = urllib2.urlopen(image_url)
+    image = urllib.request.urlopen(image_url)
     # Use ``image.url`` below instead of image_url in case of a redirect.
-    image_path = pathlib.Path(urllib2.urlparse.urlparse(image.url).path)
+    image_path = pathlib.Path(urllib.parse.urlparse(image.url).path)
     tar_file = parent.joinpath(image_path.name)
     with open(str(tar_file), 'wb') as tf:
         tf.write(image.read())

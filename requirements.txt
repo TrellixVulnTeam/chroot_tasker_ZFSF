@@ -1,3 +1,2 @@
 click==6.6
-pathlib==1.0.1
 psutil==4.1.0
