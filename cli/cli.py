@@ -34,5 +34,19 @@ def create(image_url, args):
 
     print task.id
 
-# TODO healthcheck
-# TODO sendsignal - with error handling?
+
+@cli.command('health_check')
+@click.argument('task_id')
+def health_check(task_id):
+    """
+    TODO
+    """
+
+
+@cli.command('send_signal')
+@click.argument('task_id')
+@click.argument('signal')
+def send_signal(task_id, signal):
+    """
+    TODO
+    """
