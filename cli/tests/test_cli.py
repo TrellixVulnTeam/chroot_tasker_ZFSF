@@ -34,9 +34,10 @@ class TestCreate(object):
         assert result.exit_code == 0
         assert cmdline == commands.split()
 
-    def test_send_signal(self, tmpdir):
+    def test_send_signal_healthcheck(self, tmpdir):
         """
         Sending a SIGTERM signal to a task stops the process running.
+        The status before and after is relayed by the healthcheck function.
         """
         # Change directory to temporary directory so as not to pollute current
         # working directory with downloaded filesystem.
@@ -46,23 +47,7 @@ class TestCreate(object):
         create = runner.invoke(cli, ['create', ROOTFS_URI, 'sleep 100'])
         task_id = create.output
 
-        healthcheck = runner.invoke(cli, ['create', ROOTFS_URI, 'sleep 100'])
-        # TODO Use healthcheck to check that
+        healthcheck = runner.invoke(cli, ['healthcheck', task_id])
+        # assert healthcheck.output == ''
         runner.invoke(cli, ['signal', task_id, 'SIGTERM'])
-        # assert not psutil.pid_exists(child_process.pid)
-
-    def test_health_check(self, tmpdir):
-        """
-        The status of a given task can be printed.
-        """
-        os.chdir(tmpdir.strpath)
-
-        runner = CliRunner()
-        create = runner.invoke(cli, ['create', ROOTFS_URI, 'sleep 100'])
-        ppid_str = create.output
-
-        child_process = 'TODO'
-        # TODO Use healthcheck instead of direct process manipulation
-        # assert psutil.pid_exists(child_process.pid)
-        runner.invoke(cli, ['signal', ppid_str, 'SIGTERM'])
-        # assert not psutil.pid_exists(child_process.pid)
+        # assert healthcheck.output == ''
