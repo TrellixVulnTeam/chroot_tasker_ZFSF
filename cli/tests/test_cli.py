@@ -25,7 +25,7 @@ class TestCreate(object):
         os.chdir(tmpdir.strpath)
 
         runner = CliRunner()
-        commands = 'sleep 10'
+        commands = 'top'
         result = runner.invoke(cli, ['create', ROOTFS_URI, commands])
         assert result.exit_code == 0
 
@@ -42,7 +42,7 @@ class TestCreate(object):
         os.chdir(tmpdir.strpath)
 
         runner = CliRunner()
-        create = runner.invoke(cli, ['create', ROOTFS_URI, 'sleep 100'])
+        create = runner.invoke(cli, ['create', ROOTFS_URI, 'top'])
         task_id = create.output
 
         before_int = runner.invoke(cli, ['health_check', task_id])

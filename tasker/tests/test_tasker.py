@@ -157,7 +157,7 @@ class TestTask(object):
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['sleep', '5'],
+            args=['top'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
         assert task.get_health() == {'exists': True, 'status': 'running'}
@@ -169,7 +169,7 @@ class TestTask(object):
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['sleep', '5'],
+            args=['top'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
         task.send_signal(signal.SIGINT)
@@ -181,7 +181,7 @@ class TestTask(object):
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['sleep', '5'],
+            args=['top'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
 

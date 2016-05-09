@@ -75,7 +75,6 @@ To use ``tasker``:
 
    import os
    import pathlib
-   import shlex
    import signal
 
    from tasker.tasker import Task
@@ -84,7 +83,7 @@ To use ``tasker``:
       # An image to download, extract and create a chroot jail in.
       image_url='http://example.com/image.tar',
       # A command to run in the extracted filesystem.
-      args=shlex.split('sleep 10'),
+      args=['top'],
       # Where the image will be downloaded and extracted into.
       download_path=pathlib.Path(os.getcwd()),
    )
