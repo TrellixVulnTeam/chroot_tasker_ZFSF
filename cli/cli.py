@@ -4,7 +4,6 @@ CLI for creating and interacting with tasks.
 
 import os
 import pathlib
-import psutil
 import shlex
 
 import click
@@ -33,11 +32,7 @@ def create(image_url, args):
         download_path=pathlib.Path(os.getcwd()),
     )
 
-    # TODO Don't do this, have a direct .task_id on the task
-    process = psutil.Process(task.process.pid)
-
-    # Print the process's parent id
-    print process.ppid()
+    print task.id
 
 # TODO healthcheck
 # TODO sendsignal - with error handling?
