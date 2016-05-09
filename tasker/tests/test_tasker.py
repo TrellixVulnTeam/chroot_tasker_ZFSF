@@ -150,7 +150,7 @@ class TestTask(object):
     """
     Tests for ``Task``.
     """
-    # TODO add to README
+    # TODO Factor out task creation?
 
     def test_create_task(self, tmpdir):
         """
@@ -176,3 +176,16 @@ class TestTask(object):
         )
         task.send_signal(signal.SIGINT)
         assert not psutil.pid_exists(task.process.pid)
+
+    def test_healthcheck(self, tmpdir):
+        """
+        TODO
+        """
+        task = Task(
+            image_url=ROOTFS_URI,
+            args=['sleep', '100'],
+            download_path=pathlib.Path(tmpdir.strpath),
+        )
+        health = task.get_health()
+        # TODO use freezetime?
+        assert health == {'Running': True, 'Time': '00:47'}
