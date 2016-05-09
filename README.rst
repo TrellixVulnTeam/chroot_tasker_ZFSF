@@ -49,11 +49,15 @@ Library
 
 ``tasker`` is a Python library.
 
-To install ``tasker``:
+Installation
+^^^^^^^^^^^^
 
 .. code:: sh
 
    pip install -e .
+
+API
+^^^
 
 To use ``tasker``:
 
@@ -61,26 +65,27 @@ To use ``tasker``:
 
    import os
    import pathlib
+   import shlex
+   import signal
 
    from tasker.tasker import Task
 
-   # An image to download, extract and create a chroot jail in.
-   image_url = 'http://example.com/image.tar'
-
-   # The image will be downloaded and extracted into the parent.
-   parent = pathlib.Path(os.getcwd())
-
-   # See ``args`` at
-   # https://docs.python.org/2/library/subprocess.html#subprocess.Popen
-   args = ['echo', '1']
-
    task = Task(
-      image_url=image_url,
-      args=args,
-      parent=parent,
+      # An image to download, extract and create a chroot jail in.
+      image_url='http://example.com/image.tar',
+      # A command to run in the extracted filesystem.
+      args=shlex.split('sleep 10'),
+      # Where the image will be downloaded and extracted into.
+      download_path=pathlib.Path(os.getcwd()),
    )
 
-   pid = task.process.pid
+   task_health = task.get_health()
+   # {"running": True, "time": "0:46"}
+
+   task.send_signal(signal.SIGTERM)
+
+   task_health = task.get_health()
+   # {"running": False, "time": "0:46"}
 
 Supported platforms
 -------------------
