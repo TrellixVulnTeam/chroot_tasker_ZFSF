@@ -51,7 +51,7 @@ def health_check(task_id):
     """
     task = Task(existing_task=int(task_id))
     health = task.get_health()
-    print('exists: ' + health['exists'])
+    print('exists: ' + str(health['exists']))
     print('status: ' + health['status'])
 
 
