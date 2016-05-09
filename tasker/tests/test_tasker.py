@@ -185,7 +185,7 @@ class TestTask(object):
             download_path=pathlib.Path(tmpdir.strpath),
         )
 
-        other_task = Task(existing_id=task.id)
+        other_task = Task(existing_task=task.id)
         # Interrupting one task interrupts the other, so they are the same task
         task.send_signal(signal.SIGINT)
         assert other_task.get_health() == {'exists': False, 'status': None}

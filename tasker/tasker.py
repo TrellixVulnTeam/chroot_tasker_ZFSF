@@ -101,18 +101,24 @@ class Task(object):
         :param list args: List of strings. See ``subprocess.Popen.args``.
         :param pathlib.Path download_path: The parent to extract the downloaded
         image into.
+        :param existing_task: The id of an existing task. If this is given,
+            other parameters are ignored and no new process is started.
 
         :ivar int id: An identifier for the task.
         """
-        filesystem = _create_filesystem_dir(
-            image_url=image_url,
-            download_path=download_path,
-        )
+        if existing_task is not None:
+            self._process = psutil.Process(existing_task)
+            self.id = existing_task
+        else:
+            filesystem = _create_filesystem_dir(
+                image_url=image_url,
+                download_path=download_path,
+            )
 
-        process = _run_chroot_process(
-            filesystem=filesystem,
-            args=args,
-        )
+            process = _run_chroot_process(
+                filesystem=filesystem,
+                args=args,
+            )
 
-        self.id = process.pid
-        self._process = psutil.Process(self.id)
+            self.id = process.pid
+            self._process = psutil.Process(self.id)
