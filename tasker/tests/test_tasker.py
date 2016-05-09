@@ -194,4 +194,6 @@ class TestTask(object):
         """
         TODO
         """
+        # Look at pids, choose number higher than existing pid, get health and
+        # send signal to non-existant process
         pass
