@@ -100,11 +100,10 @@ To use ``tasker``:
 Supported platforms
 -------------------
 
-This has been tested on Ubuntu 14.04 with Python 2.7.
+This has been tested on Ubuntu 15.04 with Python 3.5.
 
 # TODO check ubuntu16.04's default Python 3
 # if it is 3.5+ then try using python3 for new signal stuff
-# Change vagrantfile to use Python 3
 # remove pathlib dependency
 # change tox to use python3
 
@@ -129,7 +128,7 @@ In the Vagrant box, create a ``virtualenv``:
 
 .. code:: sh
 
-   mkvirtualenv chroot_tasker
+   mkvirtualenv -p python3.5 tasker
 
 Install the test dependencies:
 

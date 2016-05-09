@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-apt-get -y install \
-  # Convenient for managing dependencies.
-  python-virtualenv \
-  # Necessary for psutil.
-  python-dev
+# New Python version with various improvements.
+add-apt-repository ppa:fkrull/deadsnakes
+apt update
+apt -y install python3.5
+apt -y install python3.5-dev
+
+# Convenient for managing dependencies.
+apt -y install python-virtualenv
 
 # Install and configure virtualenvwrapper
 pip install virtualenvwrapper

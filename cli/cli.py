@@ -38,7 +38,7 @@ def create(image_url, args):
         download_path=pathlib.Path(os.getcwd()),
     )
 
-    print task.id
+    print(task.id)
 
 
 @cli.command('health_check')
@@ -51,8 +51,8 @@ def health_check(task_id):
     """
     task = Task(existing_task=int(task_id))
     health = task.get_health()
-    print 'exists:', health['exists']
-    print 'status:', health['status']
+    print('exists: ' + health['exists'])
+    print('status: ' + health['status'])
 
 
 @cli.command('send_signal')
