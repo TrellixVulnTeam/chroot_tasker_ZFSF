@@ -103,7 +103,7 @@ class Task(object):
         self._process.send_signal(signal)
         try:
             os.wait()
-        except OSError:
+        except OSError:  # pragma: no cover
             pass
 
     def __init__(self, image_url=None, args=None, download_path=None,
