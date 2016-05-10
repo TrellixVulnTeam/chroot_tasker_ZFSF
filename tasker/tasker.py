@@ -101,7 +101,10 @@ class Task(object):
         :param int signal: The signal to send.
         """
         self._process.send_signal(signal)
-        os.wait()
+        try:
+            os.wait()
+        except OSError:
+            pass
 
     def __init__(self, image_url=None, args=None, download_path=None,
                  existing_task=None):
