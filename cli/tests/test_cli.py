@@ -47,9 +47,9 @@ class TestCreate(object):
         create = runner.invoke(cli, ['create', ROOTFS_URI, 'sleep 5'])
         task_id = create.output
 
-        time.sleep(0.01)
+        time.sleep(0.05)
         before_int = runner.invoke(cli, ['health_check', task_id])
-        assert before_int.output == 'exists: True\nstatus: running\n'
+        assert before_int.output == 'exists: True\nstatus: sleeping\n'
         runner.invoke(cli, ['send_signal', task_id, 'SIGINT'])
         after_int = runner.invoke(cli, ['health_check', task_id])
         assert after_int.output == 'exists: False\nstatus: None\n'
