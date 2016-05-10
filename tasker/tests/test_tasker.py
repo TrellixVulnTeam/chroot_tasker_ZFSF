@@ -157,10 +157,12 @@ class TestTask(object):
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['top'],
+            args=['sleep', '5'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
-        assert task.get_health() == {'exists': True, 'status': 'running'}
+        # It takes some time for the status to be "sleeping" reliably.
+        time.sleep(0.01)
+        assert task.get_health() == {'exists': True, 'status': 'sleeping'}
 
     def test_send_signal(self, tmpdir):
         """
