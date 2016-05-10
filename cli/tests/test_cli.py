@@ -27,10 +27,13 @@ class TestCreate(object):
         runner = CliRunner()
         commands = 'top'
         result = runner.invoke(cli, ['create', ROOTFS_URI, commands])
-        assert result.exit_code == 0
+        try:
+            assert result.exit_code == 0
 
-        task = Task(existing_task=int(result.output))
-        assert task._process.cmdline() == commands.split()
+            task = Task(existing_task=int(result.output))
+            assert task._process.cmdline() == commands.split()
+        except:
+            print(result)
 
     def test_send_signal_healthcheck(self, tmpdir):
         """
