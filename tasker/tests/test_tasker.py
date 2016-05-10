@@ -213,3 +213,29 @@ class TestTask(object):
         # Interrupting one task interrupts the other, so they are the same task
         task.send_signal(signal.SIGINT)
         assert other_task.get_health() == {'exists': False, 'status': None}
+
+    def test_custom_io(self, tmpdir):
+        """
+        It is possible to create a new process with custom IO.
+        """
+        stdout_file = tmpdir.join("output.txt")
+        stderr_file = tmpdir.join("err.txt")
+        with open(stdout_file.strpath, 'w') as stdout:
+            with open(stderr_file.strpath, 'w') as stderr:
+                Task(
+                    image_url=ROOTFS_URI,
+                    args=['echo', '1'],
+                    download_path=pathlib.Path(tmpdir.strpath),
+                    stdout=stdout,
+                    stderr=stderr,
+                )
+                Task(
+                    image_url=ROOTFS_URI,
+                    args=['sleep', 'a'],
+                    download_path=pathlib.Path(tmpdir.strpath),
+                    stdout=stdout,
+                    stderr=stderr,
+                )
+
+        assert stdout_file.read() == '1\n'
+        assert stderr_file.read() == "sleep: invalid number 'a'\n"

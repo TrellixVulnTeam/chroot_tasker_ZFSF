@@ -112,6 +112,7 @@ class Task(object):
             pass
 
     def __init__(self, image_url=None, args=None, download_path=None,
+                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                  existing_task=None):
         """
         Create a new task, which is a process running inside a chroot with root
@@ -121,6 +122,10 @@ class Task(object):
         :param list args: List of strings. See ``subprocess.Popen.args``.
         :param pathlib.Path download_path: The parent to extract the downloaded
         image into.
+        :param stdout: See
+        https://docs.python.org/3.1/library/subprocess.html#subprocess.Popen.
+        :param stderr: See
+        https://docs.python.org/3.1/library/subprocess.html#subprocess.Popen.
         :param existing_task: The id of an existing task. If this is given,
             other parameters are ignored and no new process is started.
 
@@ -142,6 +147,8 @@ class Task(object):
             process = _run_chroot_process(
                 filesystem=filesystem,
                 args=args,
+                stdout=stdout,
+                stderr=stderr,
             )
 
             self.id = process.pid
