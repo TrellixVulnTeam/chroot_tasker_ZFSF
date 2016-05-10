@@ -142,6 +142,26 @@ class TestRunChrootProcess(object):
 
         assert process.stdout.read() == b'1\n'
 
+    def test_custom_stdout(self, tmpdir):
+        """
+        A given file descriptor can act as stdout.
+        """
+        filesystem = _create_filesystem_dir(
+            image_url=ROOTFS_URI,
+            download_path=pathlib.Path(tmpdir.strpath),
+        )
+
+        stdout_file = tmpdir.join("output.txt")
+
+        with open(stdout_file.strpath, 'w') as f:
+            _run_chroot_process(
+                filesystem=filesystem,
+                args=['echo', '1'],
+                stdout=f,
+            )
+
+        assert stdout_file.read() == '1\n'
+
 
 class TestTask(object):
     """

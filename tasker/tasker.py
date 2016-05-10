@@ -42,7 +42,8 @@ def _create_filesystem_dir(image_url, download_path):
     return filesystem_path
 
 
-def _run_chroot_process(filesystem, args):
+def _run_chroot_process(filesystem, args, stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE):
     """
     Create a chroot jail and run a process in it.
 
@@ -51,6 +52,10 @@ def _run_chroot_process(filesystem, args):
     :param pathlib.Path filesystem: The directory which should be the root of
         the new process.
     :param list args: List of strings. See ``subprocess.Popen.args``.
+    :param stdout: See
+        https://docs.python.org/3.1/library/subprocess.html#subprocess.Popen.
+    :param stderr: See
+        https://docs.python.org/3.1/library/subprocess.html#subprocess.Popen.
 
     :return subprocess.Popen: The newly started process.
     """
@@ -58,8 +63,8 @@ def _run_chroot_process(filesystem, args):
     os.chroot(str(filesystem))
     process = subprocess.Popen(
         args=args,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stdout=stdout,
+        stderr=stderr,
     )
     os.fchdir(real_root)
     os.chroot(".")
