@@ -91,15 +91,21 @@ class TestRunChrootProcess(object):
     Tests for ``_run_chroot_process``.
     """
 
+    def _create_filesystem_dir(self, tmpdir):
+        """
+        Return a directory path with an extracted filesystem.
+        """
+        return _create_filesystem_dir(
+            image_url=ROOTFS_URI,
+            download_path=pathlib.Path(tmpdir.strpath),
+        )
+
     def test_run_chroot_process(self, tmpdir):
         """
         A new process is created from the given arguments in a chroot jail
         of the given filesystem path.
         """
-        filesystem = _create_filesystem_dir(
-            image_url=ROOTFS_URI,
-            download_path=pathlib.Path(tmpdir.strpath),
-        )
+        filesystem = self._create_filesystem_dir(tmpdir)
 
         _run_chroot_process(
             filesystem=filesystem,
@@ -113,14 +119,9 @@ class TestRunChrootProcess(object):
         A new process with a new process ID is created, and the process object
         is returned.
         """
-        filesystem = _create_filesystem_dir(
-            image_url=ROOTFS_URI,
-            download_path=pathlib.Path(tmpdir.strpath),
-        )
-
         old_pids = psutil.pids()
         process = _run_chroot_process(
-            filesystem=filesystem,
+            filesystem=self._create_filesystem_dir(tmpdir),
             args=['touch', '/example.txt'],
         )
         new_pids = set(psutil.pids()) - set(old_pids)
@@ -130,17 +131,42 @@ class TestRunChrootProcess(object):
         """
         By default there is a pipe to the standard I/O streams.
         """
-        filesystem = _create_filesystem_dir(
-            image_url=ROOTFS_URI,
-            download_path=pathlib.Path(tmpdir.strpath),
-        )
-
         process = _run_chroot_process(
-            filesystem=filesystem,
+            filesystem=self._create_filesystem_dir(tmpdir),
             args=['echo', '1'],
         )
 
         assert process.stdout.read() == b'1\n'
+
+    def test_custom_stdout(self, tmpdir):
+        """
+        A given file descriptor can act as stdout.
+        """
+        stdout_file = tmpdir.join("output.txt")
+
+        with open(stdout_file.strpath, 'w') as f:
+            _run_chroot_process(
+                filesystem=self._create_filesystem_dir(tmpdir),
+                args=['echo', '1'],
+                stdout=f,
+            )
+
+        assert stdout_file.read() == '1\n'
+
+    def test_custom_stderr(self, tmpdir):
+        """
+        A given file descriptor can act as stderr.
+        """
+        stderr_file = tmpdir.join("output.txt")
+
+        with open(stderr_file.strpath, 'w') as f:
+            _run_chroot_process(
+                filesystem=self._create_filesystem_dir(tmpdir),
+                args=['sleep', 'a'],
+                stderr=f,
+            )
+
+        assert stderr_file.read() == "sleep: invalid number 'a'\n"
 
 
 class TestTask(object):
@@ -187,3 +213,29 @@ class TestTask(object):
         # Interrupting one task interrupts the other, so they are the same task
         task.send_signal(signal.SIGINT)
         assert other_task.get_health() == {'exists': False, 'status': None}
+
+    def test_custom_io(self, tmpdir):
+        """
+        It is possible to create a new process with custom IO.
+        """
+        stdout_file = tmpdir.join("output.txt")
+        stderr_file = tmpdir.join("err.txt")
+        with open(stdout_file.strpath, 'w') as stdout:
+            with open(stderr_file.strpath, 'w') as stderr:
+                Task(
+                    image_url=ROOTFS_URI,
+                    args=['echo', '1'],
+                    download_path=pathlib.Path(tmpdir.strpath),
+                    stdout=stdout,
+                    stderr=stderr,
+                )
+                Task(
+                    image_url=ROOTFS_URI,
+                    args=['sleep', 'a'],
+                    download_path=pathlib.Path(tmpdir.strpath),
+                    stdout=stdout,
+                    stderr=stderr,
+                )
+
+        assert stdout_file.read() == '1\n'
+        assert stderr_file.read() == "sleep: invalid number 'a'\n"

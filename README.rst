@@ -82,6 +82,9 @@ To use ``tasker``:
       args=['sleep', '5'],
       # Where the image will be downloaded and extracted into.
       download_path=pathlib.Path(os.getcwd()),
+      # It is also possible to customise stdout and stderr by passing
+      # ``stdout`` or ``stderr`` parameters, as per
+      # https://docs.python.org/3.1/library/subprocess.html#subprocess.Popen.
    )
 
    task_health = task.get_health()
