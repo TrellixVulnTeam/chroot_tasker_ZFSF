@@ -5,7 +5,6 @@ CLI for creating and interacting with tasks.
 import os
 import pathlib
 import shlex
-
 from signal import Signals
 
 import click

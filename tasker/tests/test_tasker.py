@@ -153,7 +153,7 @@ class TestTask(object):
 
     def test_create(self, tmpdir):
         """
-        It is possible to create a new process.
+        It is possible to create a new process running a given command.
         """
         task = Task(
             image_url=ROOTFS_URI,
