@@ -187,11 +187,3 @@ class TestTask(object):
         # Interrupting one task interrupts the other, so they are the same task
         task.send_signal(signal.SIGINT)
         assert other_task.get_health() == {'exists': False, 'status': None}
-
-    def test_no_such_existing_task(self):
-        """
-        TODO
-        """
-        # Look at pids, choose number higher than existing pid, get health and
-        # send signal to non-existant process
-        pass
