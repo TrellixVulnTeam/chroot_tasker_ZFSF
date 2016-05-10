@@ -79,18 +79,18 @@ To use ``tasker``:
       # An image to download, extract and create a chroot jail in.
       image_url='http://example.com/image.tar',
       # A command to run in the extracted filesystem.
-      args=['top'],
+      args=['sleep', '5'],
       # Where the image will be downloaded and extracted into.
       download_path=pathlib.Path(os.getcwd()),
    )
 
    task_health = task.get_health()
-   # {"running": True, "time": "0:46"}
+   # {"exists": True, "status": "sleeping"}
 
    task.send_signal(signal.SIGTERM)
 
    task_health = task.get_health()
-   # {"running": False, "time": "0:46"}
+   # {"exists": False, "status": None}
 
 Supported platforms
 -------------------
