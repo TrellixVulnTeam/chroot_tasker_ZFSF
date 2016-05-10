@@ -36,18 +36,16 @@ One way to use this is:
 
 .. code:: sh
 
+   # Root permissions are necessary to create the task.
    $ sudo $(which tasker) create <IMAGE_URL> "sleep 100"
    8935 # This is the ID of the new task.
-   # TODO Check if sudo is necessary for this
-   $ sudo $(which tasker) healthcheck 8935
-   Status: X
-   Time: Y
+   $ tasker health_check 8935
+   exists: True
+   status: sleeping
    $ sudo $(which tasker) send_signal SIGINT
-   $ sudo $(which tasker) healthcheck 8935
-   # TODO should the parent die in this case?
-   # TODO update appropriately for output now, manually test
-   Status: X
-   Time: Y
+   $ tasker health_check 8935
+   exists: False
+   status: None
 
 ``tasker`` downloads the image from the given ``<IMAGE_URL>`` into the current working directory.
 Also in the directory, the image is untarred to create a "filesystem".
