@@ -3,6 +3,7 @@ Tests for ``cli.cli``.
 """
 
 import os
+import time
 
 from click.testing import CliRunner
 
@@ -29,6 +30,7 @@ class TestCreate(object):
         result = runner.invoke(cli, ['create', ROOTFS_URI, commands])
         assert result.exit_code == 0
 
+        time.sleep(0.01)
         task = Task(existing_task=int(result.output))
         assert task._process.cmdline() == commands.split()
 
@@ -42,9 +44,10 @@ class TestCreate(object):
         os.chdir(tmpdir.strpath)
 
         runner = CliRunner()
-        create = runner.invoke(cli, ['create', ROOTFS_URI, 'top'])
+        create = runner.invoke(cli, ['create', ROOTFS_URI, 'sleep 5'])
         task_id = create.output
 
+        time.sleep(0.01)
         before_int = runner.invoke(cli, ['health_check', task_id])
         assert before_int.output == 'exists: True\nstatus: running\n'
         runner.invoke(cli, ['send_signal', task_id, 'SIGINT'])
