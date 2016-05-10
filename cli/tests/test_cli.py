@@ -25,7 +25,7 @@ class TestCreate(object):
         os.chdir(tmpdir.strpath)
 
         runner = CliRunner()
-        commands = 'top'
+        commands = 'sleep 5'
         result = runner.invoke(cli, ['create', ROOTFS_URI, commands])
         try:
             assert result.exit_code == 0
@@ -33,7 +33,7 @@ class TestCreate(object):
             task = Task(existing_task=int(result.output))
             assert task._process.cmdline() == commands.split()
         except:
-            print(result)
+            raise Exception("RES=" + str(result))
 
     def test_send_signal_healthcheck(self, tmpdir):
         """
