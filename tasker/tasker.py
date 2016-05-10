@@ -6,6 +6,7 @@ import os
 import psutil
 import subprocess
 import tarfile
+import time
 import urllib.parse
 import urllib.request
 import uuid
@@ -131,3 +132,8 @@ class Task(object):
 
             self.id = process.pid
             self._process = psutil.Process(self.id)
+
+        # On some platforms it seems to take some time for a process to start,
+        # even after this point. Therefore sleep for 5ms to ensure platform
+        # parity. This seems to be necessary on Travis CI hosted.
+        time.sleep(0.05)

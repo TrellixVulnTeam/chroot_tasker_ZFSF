@@ -4,7 +4,6 @@ Tests for ``tasker.tasker``.
 
 import signal
 import tarfile
-import time
 
 import pathlib
 import psutil
@@ -107,8 +106,6 @@ class TestRunChrootProcess(object):
             args=['touch', '/example.txt'],
         )
 
-        # ``touch`` takes a short time to work.
-        time.sleep(0.01)
         assert filesystem.joinpath('example.txt').exists()
 
     def test_process_returned(self, tmpdir):
@@ -160,8 +157,7 @@ class TestTask(object):
             args=['sleep', '5'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
-        # It takes some time for the status to be "sleeping" reliably.
-        time.sleep(0.05)
+
         assert task.get_health() == {'exists': True, 'status': 'sleeping'}
 
     def test_send_signal(self, tmpdir):
@@ -171,7 +167,7 @@ class TestTask(object):
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['top'],
+            args=['sleep 5'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
         task.send_signal(signal.SIGINT)
