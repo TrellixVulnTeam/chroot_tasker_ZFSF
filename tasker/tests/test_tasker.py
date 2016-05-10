@@ -108,8 +108,7 @@ class TestRunChrootProcess(object):
 
         # ``touch`` takes a short time to work.
         time.sleep(0.01)
-        children = [item for item in filesystem.iterdir()]
-        assert filesystem.joinpath('example.txt') in children
+        assert filesystem.joinpath('example.txt').exists()
 
     def test_process_returned(self, tmpdir):
         """
