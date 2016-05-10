@@ -179,7 +179,7 @@ class TestTask(object):
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['top'],
+            args=['sleep', '5'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
 
