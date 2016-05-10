@@ -108,8 +108,7 @@ class TestRunChrootProcess(object):
 
         # ``touch`` takes a short time to work.
         time.sleep(0.01)
-        children = [item for item in filesystem.iterdir()]
-        assert filesystem.joinpath('example.txt') in children
+        assert filesystem.joinpath('example.txt').exists()
 
     def test_process_returned(self, tmpdir):
         """
@@ -151,10 +150,9 @@ class TestTask(object):
     Tests for ``Task``.
     """
 
-    def test_create_task(self, tmpdir):
+    def test_create(self, tmpdir):
         """
-        A task can be created which starts a new process running a given
-        command.
+        It is possible to create a new process running a given command.
         """
         task = Task(
             image_url=ROOTFS_URI,

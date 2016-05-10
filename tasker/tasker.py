@@ -72,8 +72,13 @@ class Task(object):
 
     def __init__(self, image_url, args, download_path):
         """
-        Create a new task.
+        Create a new task, which is a process running inside a chroot with root
+        being a downloaded image's root.
 
+        :param str image_url: The url of a ``.tar`` file.
+        :param list args: List of strings. See ``subprocess.Popen.args``.
+        :param pathlib.Path download_path: The parent to extract the downloaded
+            image into.
         """
         filesystem = _create_filesystem_dir(
             image_url=image_url,

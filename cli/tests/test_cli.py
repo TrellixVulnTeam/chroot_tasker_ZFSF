@@ -17,7 +17,7 @@ class TestCreate(object):
     Tests for creating a Task from the CLI.
     """
 
-    def test_create_task(self, tmpdir, capsys):
+    def test_create_task(self, tmpdir):
         """
         It is possible to start a Task from the CLI.
         """
