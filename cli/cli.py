@@ -5,6 +5,7 @@ CLI for creating and interacting with tasks.
 import os
 import pathlib
 import shlex
+from signal import Signals
 
 import click
 
@@ -35,4 +36,33 @@ def create(image_url, args):
         args=shlex.split(args),
         download_path=pathlib.Path(os.getcwd()),
     )
-    print(task.process.pid)
+
+    print(task.id)
+
+
+@cli.command('health_check')
+@click.argument('task_id')
+def health_check(task_id):
+    """
+    Check the health of a task.
+
+    :param str task_id: The id of an existing task.
+    """
+    task = Task(existing_task=int(task_id))
+    health = task.get_health()
+    print('exists: ' + str(health['exists']))
+    print('status: ' + str(health['status']))
+
+
+@cli.command('send_signal')
+@click.argument('task_id')
+@click.argument('signal')
+def send_signal(task_id, signal):
+    """
+    Send a signal to a process started by an existing task.
+
+    :param str task_id: The id of an existing task.
+    :param str signal: The signal to send.
+    """
+    task = Task(existing_task=int(task_id))
+    task.send_signal(Signals[signal])

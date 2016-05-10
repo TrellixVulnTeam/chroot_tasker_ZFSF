@@ -36,8 +36,16 @@ One way to use this is:
 
 .. code:: sh
 
-   $ sudo $(which tasker) create <IMAGE_URL> "<COMMANDS>"
-   8935 # This is the PID of the new process.
+   # Root permissions are necessary to create the task.
+   $ sudo $(which tasker) create <IMAGE_URL> "sleep 100"
+   8935 # This is the ID of the new task.
+   $ tasker health_check 8935
+   exists: True
+   status: sleeping
+   $ sudo $(which tasker) send_signal SIGINT
+   $ tasker health_check 8935
+   exists: False
+   status: None
 
 ``tasker`` downloads the image from the given ``<IMAGE_URL>`` into the current working directory.
 Also in the directory, the image is untarred to create a "filesystem".
@@ -49,11 +57,15 @@ Library
 
 ``tasker`` is a Python library.
 
-To install ``tasker``:
+Installation
+^^^^^^^^^^^^
 
 .. code:: sh
 
    pip install -e .
+
+API
+^^^
 
 To use ``tasker``:
 
@@ -61,26 +73,26 @@ To use ``tasker``:
 
    import os
    import pathlib
+   import signal
 
    from tasker.tasker import Task
 
-   # An image to download, extract and create a chroot jail in.
-   image_url = 'http://example.com/image.tar'
-
-   # The image will be downloaded and extracted into the download_path.
-   download_path = pathlib.Path(os.getcwd())
-
-   # See ``args`` at
-   # https://docs.python.org/2/library/subprocess.html#subprocess.Popen
-   args = ['echo', '1']
-
    task = Task(
-      image_url=image_url,
-      args=args,
-      download_path=download_path,
+      # An image to download, extract and create a chroot jail in.
+      image_url='http://example.com/image.tar',
+      # A command to run in the extracted filesystem.
+      args=['top'],
+      # Where the image will be downloaded and extracted into.
+      download_path=pathlib.Path(os.getcwd()),
    )
 
-   pid = task.process.pid
+   task_health = task.get_health()
+   # {"running": True, "time": "0:46"}
+
+   task.send_signal(signal.SIGTERM)
+
+   task_health = task.get_health()
+   # {"running": False, "time": "0:46"}
 
 Supported platforms
 -------------------
@@ -108,7 +120,7 @@ In the Vagrant box, create a ``virtualenv``:
 
 .. code:: sh
 
-   mkvirtualenv -p python3.5 chroot_tasker
+   mkvirtualenv -p python3.5 tasker
 
 Install the test dependencies:
 
@@ -153,3 +165,11 @@ There are at least three options for the directory in which to create the filesy
 The current implementation is (2).
 Ideally there would be multiple of the above, with (2) as the default.
 The issue for this is https://github.com/adamtheturtle/chroot_tasker/issues/24.
+
+Identifiers
+^^^^^^^^^^^
+
+This uses PIDs as identifiers.
+This is not safe - PIDs get reused and so this could end up with a user manipulating the wrong process.
+This was a simple to implement strategy.
+A long term solution might be stateful and have a mapping of tasks to unique identifiers.

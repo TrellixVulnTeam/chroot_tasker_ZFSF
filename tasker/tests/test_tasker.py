@@ -2,8 +2,8 @@
 Tests for ``tasker.tasker``.
 """
 
+import signal
 import tarfile
-import time
 
 import pathlib
 import psutil
@@ -106,8 +106,6 @@ class TestRunChrootProcess(object):
             args=['touch', '/example.txt'],
         )
 
-        # ``touch`` takes a short time to work.
-        time.sleep(0.01)
         assert filesystem.joinpath('example.txt').exists()
 
     def test_process_returned(self, tmpdir):
@@ -156,7 +154,36 @@ class TestTask(object):
         """
         task = Task(
             image_url=ROOTFS_URI,
-            args=['echo', '1'],
+            args=['sleep', '5'],
             download_path=pathlib.Path(tmpdir.strpath),
         )
-        assert isinstance(task.process.pid, int)
+
+        assert task.get_health() == {'exists': True, 'status': 'sleeping'}
+
+    def test_send_signal(self, tmpdir):
+        """
+        Sending a ``SIGINT`` signal to ``task.send_signal`` kills the child
+        process.
+        """
+        task = Task(
+            image_url=ROOTFS_URI,
+            args=['sleep', '5'],
+            download_path=pathlib.Path(tmpdir.strpath),
+        )
+        task.send_signal(signal.SIGINT)
+        assert task.get_health() == {'exists': False, 'status': None}
+
+    def test_existing_task(self, tmpdir):
+        """
+        It is possible to get an existing task by its id.
+        """
+        task = Task(
+            image_url=ROOTFS_URI,
+            args=['sleep', '5'],
+            download_path=pathlib.Path(tmpdir.strpath),
+        )
+
+        other_task = Task(existing_task=task.id)
+        # Interrupting one task interrupts the other, so they are the same task
+        task.send_signal(signal.SIGINT)
+        assert other_task.get_health() == {'exists': False, 'status': None}

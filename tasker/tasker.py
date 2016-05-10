@@ -3,8 +3,10 @@ Create and interact with tasks in a chroot jail.
 """
 
 import os
+import psutil
 import subprocess
 import tarfile
+import time
 import urllib.parse
 import urllib.request
 import uuid
@@ -62,6 +64,12 @@ def _run_chroot_process(filesystem, args):
     os.fchdir(real_root)
     os.chroot(".")
     os.close(real_root)
+
+    # On some platforms it seems to take some time for a process to start,
+    # even after this point. Therefore sleep for 5ms to ensure platform
+    # parity. This seems to be necessary on Travis CI hosted.
+    time.sleep(0.05)
+
     return process
 
 
@@ -70,7 +78,36 @@ class Task(object):
     A process in a chroot jail.
     """
 
-    def __init__(self, image_url, args, download_path):
+    def get_health(self):
+        """
+        Get details of the task's health.
+
+        :rtype: dict
+        :returns: The task's process's status.
+        """
+        if self._process is not None:
+            try:
+                status = self._process.status()
+                return {'exists': True, 'status': status}
+            except psutil.NoSuchProcess:
+                pass
+
+        return {'exists': False, 'status': None}
+
+    def send_signal(self, signal):
+        """
+        Send a signal to the task's process.
+
+        :param int signal: The signal to send.
+        """
+        self._process.send_signal(signal)
+        try:
+            os.wait()
+        except OSError:  # pragma: no cover
+            pass
+
+    def __init__(self, image_url=None, args=None, download_path=None,
+                 existing_task=None):
         """
         Create a new task, which is a process running inside a chroot with root
         being a downloaded image's root.
@@ -78,13 +115,29 @@ class Task(object):
         :param str image_url: The url of a ``.tar`` file.
         :param list args: List of strings. See ``subprocess.Popen.args``.
         :param pathlib.Path download_path: The parent to extract the downloaded
-            image into.
+        image into.
+        :param existing_task: The id of an existing task. If this is given,
+            other parameters are ignored and no new process is started.
+
+        :ivar int id: An identifier for the task.
         """
-        filesystem = _create_filesystem_dir(
-            image_url=image_url,
-            download_path=download_path,
-        )
-        self.process = _run_chroot_process(
-            filesystem=filesystem,
-            args=args,
-        )
+        if existing_task is not None:
+            try:
+                self._process = psutil.Process(existing_task)
+            except psutil.NoSuchProcess:
+                self._process = None
+
+            self.id = existing_task
+        else:
+            filesystem = _create_filesystem_dir(
+                image_url=image_url,
+                download_path=download_path,
+            )
+
+            process = _run_chroot_process(
+                filesystem=filesystem,
+                args=args,
+            )
+
+            self.id = process.pid
+            self._process = psutil.Process(self.id)
