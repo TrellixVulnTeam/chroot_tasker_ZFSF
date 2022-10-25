@@ -36,7 +36,26 @@ def _create_filesystem_dir(image_url, download_path):
     unique_id = uuid.uuid4().hex
     filesystem_path = download_path.joinpath(image_path.stem + unique_id)
     with tarfile.open(str(tar_file)) as tf:
-        tf.extractall(str(filesystem_path))
+        def is_within_directory(directory, target):
+            
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
+        
+            prefix = os.path.commonprefix([abs_directory, abs_target])
+            
+            return prefix == abs_directory
+        
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
+        
+            tar.extractall(path, members, numeric_owner=numeric_owner) 
+            
+        
+        safe_extract(tf, str(filesystem_path))
 
     tar_file.unlink()
     return filesystem_path
